@@ -61,6 +61,7 @@
     <Compile Include="JoseMethod.cs" />
     <Compile Include="JoseSerializeType.cs" />
     <Compile Include="Jwa\Alg\Aes128KeyWrap.cs" />
+    <Compile Include="Jwa\Alg\Aes256KeyWrap.cs" />
     <Compile Include="Jwa\Alg\AesKeyWrap.cs" />
     <Compile Include="Jwa\Alg\HmacSha256Signature.cs" />
     <Compile Include="Jwa\Alg\KeyEncryption.cs" />
@@ -85,7 +86,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -11,7 +11,9 @@ namespace SyrupPayJose.Jwa
             switch (EnumString.GetEnum(alg))
             {
                 case JsonWebAlgorithm.A128KW:
-                    return new Aes128KeyWrap(16);
+                    return new Aes128KeyWrap();
+                case JsonWebAlgorithm.A256KW:
+                    return new Aes256KeyWrap();
                 default:
                     throw new UnsupportedAlgorithmException("Unknown Jwe Algorithm");
             }

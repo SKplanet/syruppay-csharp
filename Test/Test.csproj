@@ -74,6 +74,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Jwa\Alg\Aes128KeyWrapTest.cs" />
+    <Compile Include="Jwa\Alg\Aes256KeyWrapTest.cs" />
     <Compile Include="Jwa\Enc\Aes128HmacEncryptionTest.cs" />
     <Compile Include="JoseTest.cs" />
     <Compile Include="Jwe\JweSerializerTest.cs" />
