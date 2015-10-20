@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SyrupPayJose</id>
+    <version>0.1.0</version>
+    <title>JOSE for SyrupPay</title>
+    <authors>SKplanet</authors>
+    <owners>SKplanet</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/SyrupPay/jose_csharp</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes>add algorithm for JWE, JWS</releaseNotes>
+    <description>Supported Algorithm
+    JWE:
+    - algorithm : A128KW, A256KW
+    - encryption : A128CBC-HS256
+    JWS:
+    - algorithm : HS256
+    </description>
+    <copyright>Copyright 2015</copyright>
+    <tags>Syrup SyrupPay JOSE</tags>
+  </metadata>
+</package>
