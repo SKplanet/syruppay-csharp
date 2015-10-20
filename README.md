@@ -7,7 +7,8 @@ JOSE 규격은 SyrupPay 결제 데이터 암복호화 및 AccessToken 발행 등
 >= .NET 4.0
 
 ## Installation
-It will be supported through the NuGet
+### NuGet
+`Install-Package SyrupPayJose`
 
 ## Usage
 ### JWE
