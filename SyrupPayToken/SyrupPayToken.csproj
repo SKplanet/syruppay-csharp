@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\SyrupPayToken.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -63,6 +64,7 @@
     <Compile Include="exception\AlreadyBuiltException.cs" />
     <Compile Include="exception\IllegalArgumentException.cs" />
     <Compile Include="exception\IllegalStateException.cs" />
+    <Compile Include="exception\JsonOperationException.cs" />
     <Compile Include="IClaimBuilder.cs" />
     <Compile Include="IClaimConfigurer.cs" />
     <Compile Include="ITokenBuilder.cs" />
