@@ -291,7 +291,7 @@ namespace SyrupPayToken
                     DefaultValueHandling = DefaultValueHandling.Ignore
                 });
 
-                Debug.WriteLine(traceWriter.ToString());
+                //Debug.WriteLine(traceWriter.ToString());
                 return json;
             }
             catch (JsonSerializationException e)
