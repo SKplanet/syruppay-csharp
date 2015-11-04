@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SyrupPayToken</id>
+    <version>0.1.1</version>
+    <title>Syrup Pay Token C# Library</title>
+    <authors>SKplanet</authors>
+    <owners>SKplanet</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/SyrupPay/jose_csharp/tree/master/SyrupPayToken</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes>First SyrupPay token library</releaseNotes>
+    <description>Delete debug log</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>Syrup SyrupPay Token SyrupPayToken</tags>
+  </metadata>
+</package>
