@@ -161,7 +161,7 @@ var token = new SyrupPayTokenBuilder().Of("가맹점 ID")
 			.And()
 			.GenerateTokenBy(key);
 ```
-##### 상황 1. 시럽페이 가입 여부를 모르는 상태에서 결제 하고자 하는 경우 (회원가입, 로그인, 결제 가능 토큰)
+##### 상황 2. 시럽페이 가입 여부를 모르는 상태에서 결제 하고자 하는 경우 (회원가입, 로그인, 결제 가능 토큰)
 ```C#
 var token = new SyrupPayTokenBuilder().Of("가맹점 ID")
                 .Login()
