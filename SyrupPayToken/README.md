@@ -23,8 +23,8 @@ var key = "12345678901234561234567890123456";
 String token = new SyrupPayTokenBuilder().Of("SyrupPay 발급 가맹점 ID")
                 .Login()
                     .WithMerchantUserId("가맹점의 회원 ID 또는 식별자")
-                    .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력")
-                    .WithSsoCredential("SSO 를 발급 받았을 경우 입력")
+                    .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력")	//Optional
+                    .WithSsoCredential("SSO 를 발급 받았을 경우 입력")	//Optional
                 .And()
                 .GenerateTokenBy(key);
 
@@ -72,16 +72,16 @@ String token = new SyrupPayTokenBuilder().Of("SyrupPay 발급 가맹점 ID")
 					.WithProductUrls(
 						"http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1122841340",
 						"http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1265508741"
-						)
+						)	//Optional
 					.WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)
 					.WithAmount(50000)
 					.WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)
-					.WithShippingAddress(new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("137-332", "서초구 잠원동 하나아파트", "1동 1호", "서울", "", "kr"))
-					.WithDeliveryPhoneNumber("01011112222")
-					.WithDeliveryName("배송 수신자")
-					.WithInstallmentPerCardInformation(new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6"))
-					.WithBeAbleToExchangeToCash(false)
-					.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR)
+					.WithShippingAddress(new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("137-332", "서초구 잠원동 하나아파트", "1동 1호", "서울", "", "kr"))	//Optional
+					.WithDeliveryPhoneNumber("01011112222")		//Optional
+					.WithDeliveryName("배송 수신자")			//Optional
+					.WithInstallmentPerCardInformation(new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6"))	//Optional
+					.WithBeAbleToExchangeToCash(false)			//Optional
+					.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR)	//Optional
 				.And()
 				.GenerateTokenBy(key);
 
@@ -137,73 +137,73 @@ eyJhbGciOiJIUzI1NiIsImtpZCI6IlN5cnVwUGF5IOuwnOq4iSDqsIDrp7nsoJAgSUQiLCJ0eXAiOiJK
 #### 이용하고자 하는 시럽페이 서비스 기능이 복합적인 경우 중첩하여 사용 가능하다.
 ##### 상황 1. 시럽페이 가입 여부를 모르는 상태에서 결제 하고자 하는 경우 (회원가입, 로그인, 결제 가능 토큰)
 ```C#
-String token = new SyrupPayTokenBuilder().Of("가맹점 ID")
-                    .SignUp() 
-                        .WithMerchantUserId("가맹점의 회원 ID 또는 식별자")
-                        .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력") // Optional
-                    .And()
-                    .Pay()
-                    	.WithOrderIdOfMerchant("가맹점에서 관리하는 주문 ID") // 가맹점 Transaction Id = mctTransAuthId
-                    	.WithProductTitle("제품명")
-                    	.WithProductUrls(
-                            "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1122841340",
-                            "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1265508741"
-                            ) // Optional
-                        .WithLanguageForDisplay(PayConfigurer.Language.KO) 
-                        .WithAmount(50000)
-                        .WithCurrency(PayConfigurer.Currency.KRW)
-                        .WithShippingAddress(new PayConfigurer.ShippingAddress("137-332", "서초구 잠원동 하나아파트", "1동 1호", "서울", "", "kr")) // Optional
-                        .WithDeliveryPhoneNumber("01011112222") // Optional
-                        .WithDeliveryName("배송 수신자") // Optional
-                        .WithInstallmentPerCardInformation(new PayConfigurer.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6")) // Optional
-                        .WithBeAbleToExchangeToCash(false) // Optional
-                        .WithPayableRuleWithCard(PayConfigurer.PayableLocaleRule.ONLY_ALLOWED_KOR) // Optional
-                    .And()
-                    .GenerateTokenBy("가맹점에게 전달한 비밀키");
+var token = new SyrupPayTokenBuilder().Of("가맹점 ID")
+			.SignUp()
+				.WithMerchantUserId("syrup_order_user_id")
+				.WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력") // Optional
+			.And()
+			.Pay()
+				.WithOrderIdOfMerchant("가맹점에서 관리하는 주문 ID") // 가맹점 Transaction Id = mctTransAuthId
+				.WithProductTitle("제품명")
+				.WithProductUrls(
+					"http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1122841340",
+					"http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1265508741"
+					) // Optional
+				.WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)
+				.WithAmount(50000)
+				.WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)
+				.WithShippingAddress(new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("137-332", "서초구 잠원동 하나아파트", "1동 1호", "서울", "", "kr")) // Optional
+				.WithDeliveryPhoneNumber("01011112222") // Optional
+				.WithDeliveryName("배송 수신자") // Optional
+				.WithInstallmentPerCardInformation(new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6")) // Optional
+				.WithBeAbleToExchangeToCash(false)
+				.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_NOT_ALLOED_USA)
+			.And()
+			.GenerateTokenBy(key);
 ```
 ##### 상황 1. 시럽페이 가입 여부를 모르는 상태에서 결제 하고자 하는 경우 (회원가입, 로그인, 결제 가능 토큰)
 ```C#
-String token = new SyrupPayTokenBuilder().Of("가맹점 ID")
-                    .Login() 
-                        .WithMerchantUserId("가맹점의 회원 ID 또는 식별자")
-                        .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력") // Optional
-                        .WithSsoCredential("발급 받은 SSO")
-                    .And()
-                    .Pay()
-                        .WithOrderIdOfMerchant("가맹점에서 관리하는 주문 ID") // 가맹점 Transaction Id = mctTransAuthId
-                        .WithProductTitle("제품명")
-                        .WithProductUrls(
-                            "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1122841340",
-                            "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1265508741"
-                            ) // Optional
-                        .WithLanguageForDisplay(PayConfigurer.Language.KO)  
-                        .WithAmount(50000)
-                        .WithCurrency(PayConfigurer.Currency.KRW)
-                        .WithShippingAddress(new PayConfigurer.ShippingAddress("137-332", "서초구 잠원동 하나아파트", "1동 1호", "서울", "", "kr")) // Optional
-                        .WithDeliveryPhoneNumber("01011112222") // Optional
-                        .WithDeliveryName("배송 수신자") // Optional
-                        .WithInstallmentPerCardInformation(new PayConfigurer.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6")) // Optional
-                        .WithBeAbleToExchangeToCash(false) // Optional
-                        .WithPayableRuleWithCard(PayConfigurer.PayableLocaleRule.ONLY_ALLOWED_KOR) // Optional
-                    .And()
-                    .GenerateTokenBy("가맹점에게 전달한 비밀키");
+var token = new SyrupPayTokenBuilder().Of("가맹점 ID")
+                .Login()
+                    .WithMerchantUserId("가맹점의 회원 ID 또는 식별자")
+                    .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력") // Optional
+                    .WithSsoCredential("발급 받은 SSO")	//Optainal
+                .And()
+                .Pay()
+                    .WithOrderIdOfMerchant("가맹점에서 관리하는 주문 ID") // 가맹점 Transaction Id = mctTransAuthId
+                    .WithProductTitle("제품명")
+                    .WithProductUrls(
+                        "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1122841340",
+                        "http://deal.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=1265508741"
+                        ) // Optional
+                    .WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)
+                    .WithAmount(50000)
+                    .WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)
+                    .WithShippingAddress(new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("137-332", "서초구 잠원동 하나아파트", "1동 1호", "서울", "", "kr")) // Optional
+                    .WithDeliveryPhoneNumber("01011112222") // Optional
+                    .WithDeliveryName("배송 수신자") // Optional
+                    .WithInstallmentPerCardInformation(new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6")) // Optional
+                    .WithBeAbleToExchangeToCash(false) // Optional
+                    .WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR) // Optional
+                .And()
+                .GenerateTokenBy(key);
 ```
 
 ## 참고 사항
 ### 시럽페이 사용자 연동을 위한 Syrup Pay Token 세팅
 Syrup Pay 사용자에 대한 정보를 조회하여 Syrup Pay 수동 로그인 시 ID 자동 입력과 같은 추가적인 기능을 수행할 수 있도록 매칭이 되는 정보를 설정하고 토큰을 생성합니다.
 ```C#
-String token = new SyrupPayTokenBuilder().Of("가맹점 ID")
-                .login()
-                    .WithMerchantUserId("가맹점의 회원 ID 또는 식별자")
-                    .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력")
-                    .WithSsoCredential("SSO 를 발급 받았을 경우 입력")
-                .And()
-                .MapToSyrupPayUser()
-                    .WithType(MapToSyrupPayUserConfigurer.MappingType.CI_MAPPED_KEY)
-                    .WithValue("4987234")
-                .And()
-                .GenerateTokenBy("가맹점에게 전달한 비밀키");
+var token = new SyrupPayTokenBuilder().Of("가맹점 ID")
+    .Login()
+        .WithMerchantUserId("가맹점의 회원 ID 또는 식별자")
+        .WithExtraMerchantUserId("핸드폰과 같이 회원 별 추가 ID 체계가 존재할 경우 입력")
+        .WithSsoCredential("SSO 를 발급 받았을 경우 입력")
+    .And()
+    .MapToSyrupPayUser()
+        .WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_MAPPED_KEY)
+        .WithValue("4987234")
+    .And()
+    .GenerateTokenBy(key);
 ```
 
 ### token의 결과
