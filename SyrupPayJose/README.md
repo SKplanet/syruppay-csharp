@@ -21,7 +21,9 @@ var payload = "Test";
 //kid : SyrupPay가 발급하는 iss
 var kid = "Sample";
 //SyrupPay가 발급하는 secret
-var key = "1234567890123456";
+//JsonWebAlgorithm.A128KW 인 경우 key bytes size가 16bytes
+//JsonWebAlgorithm.A256KW 인 경우 key bytes size가 32bytes
+var key = "12345678901234561234567890123456";
 
 /*
  * JWE header 규격
@@ -31,7 +33,7 @@ var key = "1234567890123456";
 //1. encryption
 var jweToken = new Jose().Configuration(
                 JoseBuilders.JsonEncryptionCompactSerializationBuilder()
-                    .Header(new JoseHeader(JsonWebAlgorithm.A128KW, JsonWebAlgorithm.A128CBC_HS256, kid))
+                    .Header(new JoseHeader(JsonWebAlgorithm.A256KW, JsonWebAlgorithm.A128CBC_HS256, kid))
                     .Payload(payload)
                     .Key(key)
                 ).Serialization();
@@ -54,7 +56,7 @@ var payload = "Test";
 //kid : SyrupPay가 발급하는 iss
 var kid = "Sample";
 //SyrupPay가 발급하는 secret
-var key = "1234567890123456";
+var key = "12345678901234561234567890123456";
 
 /*
  * JWS header 규격
