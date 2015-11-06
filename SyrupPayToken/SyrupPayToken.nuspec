@@ -7,7 +7,7 @@
     <authors>SKplanet</authors>
     <owners>SKplanet</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://github.com/SyrupPay/jose_csharp/tree/master/SyrupPayToken</projectUrl>
+    <projectUrl>https://github.com/skplanet/syruppay-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes>First SyrupPay token library</releaseNotes>
     <description>Delete debug log</description>

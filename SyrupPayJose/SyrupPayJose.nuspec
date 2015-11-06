@@ -7,7 +7,7 @@
     <authors>SKplanet</authors>
     <owners>SKplanet</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://github.com/SyrupPay/jose_csharp</projectUrl>
+    <projectUrl>https://github.com/skplanet/syruppay-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes>add algorithm for JWE, JWS</releaseNotes>
     <description>Supported Algorithm
