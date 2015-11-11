@@ -64,8 +64,72 @@ namespace SyrupPayJose
 
         public void SetSerialize(string src)
         {
+            var token = src.Split('.');
+            if (token != null && token.Length == 5 || token.Length == 3)
+            {
+                src = token[0];
+            }
+
             var json = Base64.base64urldecode(src);
             this.dictionary = JsonConvert.DeserializeObject<OrderedDictionary>(StringUtils.ByteToString(json));
+        }
+
+        public JoseMethod GetJoseMethod()
+        {
+            if (JoseSupportAlgorithm.IsJWESupported(Alg))
+            {
+                return JoseMethod.JWE;
+            }
+            else if (JoseSupportAlgorithm.IsJWSSupported(Alg))
+            {
+                return JoseMethod.JWS;
+            }
+            else
+            {
+                throw new UnsupportedAlgorithmException(Alg+" is not supported");
+            }
+        }
+
+        class JoseSupportAlgorithm
+        {
+            public static bool IsSupported(string alg)
+            {
+                return IsJWESupported(alg) || IsJWSSupported(alg);
+            }
+
+            public static bool IsJWESupported(string alg)
+            {
+                try
+                {
+                    return !Object.ReferenceEquals(null, JwaFactory.GetJweAlgorithm(alg));
+                }
+                catch (UnsupportedAlgorithmException e)
+                {
+                    return false;
+                }
+                
+            }
+
+            public static bool IsJWSSupported(string alg)
+            {
+                try
+                {
+                    return !Object.ReferenceEquals(null, JwaFactory.GetJwsAlgorithm(alg));
+                }
+                catch (UnsupportedAlgorithmException e)
+                {
+                    return false;
+                }
+                
+            }
+        }
+
+        class JoseSupportEncryption
+        {
+            public static bool IsSupported(string enc)
+            {
+                return !Object.ReferenceEquals(null, JwaFactory.GetJweEncryption(enc));
+            }
         }
 
         public string Alg

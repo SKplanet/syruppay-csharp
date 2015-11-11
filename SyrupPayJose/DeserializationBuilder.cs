@@ -10,6 +10,10 @@ namespace SyrupPayJose
 
         public override IJoseAction Create()
         {
+            JoseHeader header = new JoseHeader();
+            header.SetSerialize(serializedSource);
+            joseMethod = header.GetJoseMethod();
+
             switch (joseSerializeType)
             {
                 case JoseSerializeType.COMPACT_SERIALIZATION:
@@ -35,6 +39,11 @@ namespace SyrupPayJose
         public DeserializationBuilder(JoseMethod joseMethod, JoseActionType joseActionType)
         {
             base.CompactBuilder(joseMethod, joseActionType);
+        }
+
+        public DeserializationBuilder(JoseActionType joseActionType)
+        {
+            base.CompactBuilder(joseActionType);
         }
 
         public DeserializationBuilder SerializedSource(string serializedSource)

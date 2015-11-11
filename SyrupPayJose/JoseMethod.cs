@@ -2,6 +2,6 @@
 {
     public enum JoseMethod
     {
-        JWS, JWE
+        NONE, JWS, JWE
     }
 }

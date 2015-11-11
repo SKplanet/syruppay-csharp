@@ -8,6 +8,11 @@
 
         protected string key;
 
+        protected void CompactBuilder(JoseActionType joseActionType)
+        {
+            CompactBuilder(JoseMethod.NONE, JoseSerializeType.COMPACT_SERIALIZATION, joseActionType);
+        }
+
         protected void CompactBuilder(JoseMethod joseMethod, JoseActionType joseActionType)
         {
             CompactBuilder(joseMethod, JoseSerializeType.COMPACT_SERIALIZATION, joseActionType);

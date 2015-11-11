@@ -40,7 +40,7 @@ var jweToken = new Jose().Configuration(
 
 //2. verify and decryption
 var result = new Jose().Configuration(
-                JoseBuilders.JsonEncryptionCompactDeserializationBuilder()
+                JoseBuilders.CompactDeserializationBuilder()
                     .SerializedSource(jweToken)
                     .Key(key)
                 ).Deserialization();
@@ -72,7 +72,7 @@ var jwsToken = new Jose().Configuration(
 
 //2. verify
 var result = new Jose().Configuration(
-                JoseBuilders.JsonSignatureCompactDeserializationBuilder()
+                JoseBuilders.CompactDeserializationBuilder()
                     .SerializedSource(jwsToken)
                     .Key(key)
                 ).Deserialization();
