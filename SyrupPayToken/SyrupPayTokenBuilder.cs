@@ -39,7 +39,7 @@ namespace SyrupPayToken
         public static IToken<SyrupPayTokenBuilder> Verify(String token, String key)
         {
             var payload = new Jose().Configuration(
-                JoseBuilders.JsonSignatureCompactDeserializationBuilder()
+                JoseBuilders.CompactDeserializationBuilder()
                     .SerializedSource(token)
                     .Key(key)
                 ).Deserialization();

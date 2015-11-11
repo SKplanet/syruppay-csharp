@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>SyrupPayJose</id>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
     <title>JOSE for SyrupPay</title>
     <authors>SKplanet</authors>
     <owners>SKplanet</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/skplanet/syruppay-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <releaseNotes>add algorithm for JWE, JWS</releaseNotes>
+    <releaseNotes>Combine JWE, JWS deserialize builder method</releaseNotes>
     <description>Supported Algorithm
     JWE:
     - algorithm : A128KW, A256KW
