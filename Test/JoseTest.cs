@@ -25,7 +25,7 @@ namespace Test
             Console.WriteLine("JWE = " + jweToken);
 
             var serializeAction = new Jose().Configuration(
-                JoseBuilders.JsonEncryptionCompactDeserializationBuilder()
+                JoseBuilders.CompactDeserializationBuilder()
                     .SerializedSource(jweToken)
                     .Key(key)
                 );
@@ -52,7 +52,7 @@ namespace Test
                 ).Serialization();
 
             var serializeAction = new Jose().Configuration(
-                JoseBuilders.JsonSignatureCompactDeserializationBuilder()
+                JoseBuilders.CompactDeserializationBuilder()
                     .SerializedSource(jwsToken)
                     .Key(key)
                 );
