@@ -185,6 +185,7 @@ var token = new SyrupPayTokenBuilder().Of("가맹점 ID")
                     .WithInstallmentPerCardInformation(new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("카드구분 코드", "할부정보. ex. NN1;NN2;YY3;YY4;YY5;NH6")) // Optional
                     .WithBeAbleToExchangeToCash(false) // Optional
                     .WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR) // Optional
+					.WithMerchantDefinedValue("{\"id_1\": \"value\",\"id_2\": 2\"}")
                 .And()
                 .GenerateTokenBy(key);
 ```

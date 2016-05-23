@@ -19,6 +19,8 @@ namespace SyrupPayToken.Claims
         [JsonProperty]
         private string mctTransAuthId;
         [JsonProperty]
+        private string mctDefinedValue;
+        [JsonProperty]
         private PaymentInformationBySeller paymentInfo = new PaymentInformationBySeller();
         [JsonProperty]
         private PaymentRestriction paymentRestrictions = new PaymentRestriction();
@@ -73,6 +75,12 @@ namespace SyrupPayToken.Claims
             return mctTransAuthId;
         }
 
+        public string GetMerchanttDefinedValue()
+        {
+            return mctDefinedValue;
+        }
+
+
         public PaymentInformationBySeller GetPaymentInfo()
         {
             return paymentInfo;
@@ -86,6 +94,12 @@ namespace SyrupPayToken.Claims
         public PayConfigurer<H> WithOrderIdOfMerchant(string orderId)
         {
             mctTransAuthId = orderId;
+            return this;
+        }
+
+        public PayConfigurer<H> WithMerchantDefinedValue(string merchantDefinedValue)
+        {
+            this.mctDefinedValue = merchantDefinedValue;
             return this;
         }
 
@@ -206,6 +220,9 @@ namespace SyrupPayToken.Claims
 
             if (mctTransAuthId.Length > 40)
                 throw new IllegalArgumentException("order id of merchant couldn't be longer than 40. but yours is " + mctTransAuthId.Length);
+
+            if (!String.IsNullOrEmpty(this.mctTransAuthId) && mctTransAuthId.Length > 1024)
+                throw new IllegalArgumentException("merchant define value's length couldn't be bigger than 1024. but yours is " + mctDefinedValue.Length);
         }
 
         public enum Language
