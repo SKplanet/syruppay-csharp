@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayJose", "SyrupPayJose\SyrupPayJose.csproj", "{85DFC960-8E01-4B97-812C-5A4F2511E4BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{4AEE8BBB-7CF4-40B0-B8D4-6973D56CA726}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayToken", "SyrupPayToken\SyrupPayToken.csproj", "{62A85BFB-CED2-4803-AC8A-960825471E7A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{5ED51869-E208-4155-9F50-B7ACC855FD94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{62A85BFB-CED2-4803-AC8A-960825471E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62A85BFB-CED2-4803-AC8A-960825471E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62A85BFB-CED2-4803-AC8A-960825471E7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5ED51869-E208-4155-9F50-B7ACC855FD94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5ED51869-E208-4155-9F50-B7ACC855FD94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5ED51869-E208-4155-9F50-B7ACC855FD94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5ED51869-E208-4155-9F50-B7ACC855FD94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
