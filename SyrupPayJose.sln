@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayToken", "SyrupPayToken\SyrupPayToken.csproj", "{62A85BFB-CED2-4803-AC8A-960825471E7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{3AB0EF5E-C5C5-4783-91F0-5F4EDB49CA6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{62A85BFB-CED2-4803-AC8A-960825471E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62A85BFB-CED2-4803-AC8A-960825471E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62A85BFB-CED2-4803-AC8A-960825471E7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB0EF5E-C5C5-4783-91F0-5F4EDB49CA6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB0EF5E-C5C5-4783-91F0-5F4EDB49CA6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB0EF5E-C5C5-4783-91F0-5F4EDB49CA6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB0EF5E-C5C5-4783-91F0-5F4EDB49CA6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
