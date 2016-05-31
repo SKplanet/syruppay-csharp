@@ -1,6 +1,4 @@
-﻿using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Parameters;
-using SyrupPayJose.Jwa.Enc;
+﻿using SyrupPayJose.Jwa.Enc;
 using System;
 
 namespace SyrupPayJose.Jwa.Alg
@@ -38,11 +36,11 @@ namespace SyrupPayJose.Jwa.Alg
         private JwaAlgResult Wrap(byte[] key, byte[] src)
         {
             var engine = new AesWrapEngine();
-            engine.Init(true, new KeyParameter(key));
+            engine.Init(key);
 
             JwaAlgResult jwaAlgResult;
             jwaAlgResult.cek = src;
-            jwaAlgResult.encryptedCek = engine.Wrap(src, 0, src.Length);
+            jwaAlgResult.encryptedCek = engine.Wrap(src);
 
             return jwaAlgResult;
         }
@@ -50,8 +48,8 @@ namespace SyrupPayJose.Jwa.Alg
         private byte[] UnWrap(byte[] key, byte[] src)
         {
             var engine = new AesWrapEngine();
-            engine.Init(false, new KeyParameter(key));
-            return engine.Unwrap(src, 0, src.Length);
+            engine.Init(key);
+            return engine.Unwrap(src);
         }
     }
 }

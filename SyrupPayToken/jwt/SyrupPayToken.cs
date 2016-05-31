@@ -25,6 +25,7 @@ namespace SyrupPayToken.jwt
         private MapToSyrupPayUserConfigurer<H> userInfoMapper = null;
         private MapToSktUserConfigurer<H> lineInfo = null;
         private OrderConfigurer<H> checkoutInfo = null;
+        private SubscriptionConfigurer<H> subscription = null;
 
         public MerchantUserConfigurer<H> LoginInfo
         {
@@ -49,6 +50,11 @@ namespace SyrupPayToken.jwt
         public OrderConfigurer<H> CheckoutInfo
         {
             get { return GetCheckoutInfo(); }
+        }
+
+        public SubscriptionConfigurer<H> Subscription
+        {
+            get { return GetSubscription(); }
         }
 
         public string Iss
@@ -181,6 +187,11 @@ namespace SyrupPayToken.jwt
         public MapToSktUserConfigurer<H> GetLineInfo()
         {
             return lineInfo;
+        }
+
+        public SubscriptionConfigurer<H> GetSubscription()
+        {
+            return subscription;
         }
 
         [Obsolete("set paymentInfo element by deprecated method", false)]

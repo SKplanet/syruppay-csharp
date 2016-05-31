@@ -61,6 +61,7 @@
     <Compile Include="Claims\MerchantUserConfigurer.cs" />
     <Compile Include="Claims\OrderConfigurer.cs" />
     <Compile Include="Claims\PayConfigurer.cs" />
+    <Compile Include="Claims\SubscriptionConfigurer.cs" />
     <Compile Include="exception\AlreadyBuiltException.cs" />
     <Compile Include="exception\IllegalArgumentException.cs" />
     <Compile Include="exception\IllegalStateException.cs" />
