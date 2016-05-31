@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SyrupPayToken</id>
-    <version>0.1.2</version>
+    <version>0.1.5</version>
     <title>Syrup Pay Token C# Library</title>
     <authors>SKplanet</authors>
     <owners>SKplanet</owners>
