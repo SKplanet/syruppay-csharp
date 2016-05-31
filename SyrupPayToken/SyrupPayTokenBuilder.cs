@@ -205,6 +205,15 @@ namespace SyrupPayToken
             return GetOrApply(new MapToSktUserConfigurer<SyrupPayTokenBuilder>());
         }
 
+        /// <summary>
+        /// 자동결제를 위한 설정 객체를 확인하여 반환한다.
+        /// </summary>
+        /// <returns><see cref="SubscriptionConfigurer{H}"/></returns>
+        public SubscriptionConfigurer<SyrupPayTokenBuilder> Subscription()
+        {
+            return GetOrApply(new SubscriptionConfigurer<SyrupPayTokenBuilder>());
+        }
+
         private C GetOrApply<C>(C configurer) where C : ClaimConfigurerAdapter<Jwt, SyrupPayTokenBuilder>
         {
             C existingConfig = GetConfigurer<C>(configurer.GetType());

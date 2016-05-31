@@ -197,6 +197,18 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public PayConfigurer<H> WithMatchedUser(MatchedUser m)
+        {
+            paymentRestrictions.MatchedUser = EnumString<MatchedUser>.GetValue(m);
+            return this;
+        }
+
+        public PayConfigurer<H> WithRestrictionPaymentType(string paymentType)
+        {
+            paymentRestrictions.PaymentType = paymentType;
+            return this;
+        }
+
         public override string ClaimName()
         {
             return "transactionInfo";
@@ -654,11 +666,27 @@ namespace SyrupPayToken.Claims
         {
             [JsonProperty]
             private string cardIssuerRegion = "ALLOWED:KOR";
+            [JsonProperty]
+            private string matchedUser;
+            [JsonProperty]
+            private string paymentType;
 
             public string CardIssuerRegion
             {
                 get { return cardIssuerRegion; }
                 set { cardIssuerRegion = value; }
+            }
+
+            public string MatchedUser
+            {
+                get { return matchedUser; }
+                set { matchedUser = value; }
+            }
+
+            public string PaymentType
+            {
+                get { return paymentType; }
+                set { paymentType = value; }
             }
 
             public void SetCardIssuerRegion(string cardIssuerRegion)
@@ -671,7 +699,11 @@ namespace SyrupPayToken.Claims
                 return cardIssuerRegion;
             }
         }
+
+        public enum MatchedUser
+        {
+            [Description("CI_MATCHED_ONLY")]
+            CI_MATCHED_ONLY
+        }
     }
-
-
 }

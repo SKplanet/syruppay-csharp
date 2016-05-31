@@ -24,5 +24,8 @@ namespace SyrupPayToken.jwt
 
         OrderConfigurer<H> CheckoutInfo { get; }
         OrderConfigurer<H> GetCheckoutInfo();
+
+        SubscriptionConfigurer<H> Subscription { get; }
+        SubscriptionConfigurer<H> GetSubscription();
     }
 }

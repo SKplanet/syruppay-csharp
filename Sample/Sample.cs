@@ -7,6 +7,7 @@ using SyrupPayJose;
 using SyrupPayToken.Claims;
 using SyrupPayToken;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace SyrupPay.Sample
 {
@@ -139,7 +140,7 @@ namespace SyrupPay.Sample
                     .WithOrderIdOfMerchant("transactionInfo.mctTransAuthId")
                     .WithMerchantDefinedValue("transactionInfo.mctDefinedValue")
                     .WithProductTitle("transactionInfo.paymentInfo.productTitle")
-                    .WithProductUrls("transactionInfo.paymentInfo.productUrls")
+                    .WithProductUrls("https://www.sample.com")
                     .WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)    //transactionInfo.paymentInfo.lang
                     .WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)             //transactionInfo.paymentInfo.currencyCode
                     .WithAmount(1000)                                                           //transactionInfo.paymentInfo.paymentAmt
@@ -158,6 +159,11 @@ namespace SyrupPay.Sample
                //.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_NOT_ALLOED_KOR)
                //.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_NOT_ALLOED_USA)
                .And()
+               .Subscription()
+                    .WithAutoPaymentId("subscription.autoPaymentId")
+                    //subscription.registrationRestrictions.matchedUser
+                    .WithMatchedUser(PayConfigurer<SyrupPayTokenBuilder>.MatchedUser.CI_MATCHED_ONLY)
+                .And()
                .GenerateTokenBy(encKey);
         }
 
