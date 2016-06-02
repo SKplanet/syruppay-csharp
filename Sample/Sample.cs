@@ -20,10 +20,28 @@ namespace SyrupPay.Sample
             string iss = "";        //시럽페이 발급 ID
 
             //거래 승인 요청 예제
-            RequestPaymentApproval(apiKey, encKey, iss);
+            Tuple<int, Dictionary<string, object>> approvalResponse = RequestPaymentApproval(apiKey, encKey, iss);
+            HandleResponse(approvalResponse);
 
             //거래 취소 요청 예제
-            RequestPaymentCancel(apiKey, encKey, iss);
+            Tuple<int, Dictionary<string, object>> cancelResponse = RequestPaymentCancel(apiKey, encKey, iss);
+            HandleResponse(cancelResponse);
+        }
+
+        public static void HandleResponse(Tuple<int, Dictionary<string, object>> response)
+        {
+            //응답 규격에 따른 결과 처리
+            Dictionary<string, object> result = null;
+            if (response.Item1 == 200)
+            {
+                result = response.Item2;
+            }
+            else
+            {
+                //response null일 경우 처리. ex) 암복호화 오류 등.
+                if (response.Item2 != null)
+                    result = response.Item2;
+            }
         }
 
         public static Tuple<int, Dictionary<string, object>> RequestPaymentApproval(string apiKey, string encKey, string iss)
