@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.IO;
-using System.Linq;
 
 namespace SyrupPayJose.Jwa.Alg
 {
@@ -84,7 +83,7 @@ namespace SyrupPayJose.Jwa.Alg
 
         private byte[] AesEnc(byte[] sharedKey, byte[] plainText)
         {
-            using (Aes aes = new AesManaged())
+            using (Rijndael aes = Rijndael.Create())
             {
                 aes.Key = sharedKey;
                 aes.Mode = CipherMode.ECB;
@@ -108,7 +107,7 @@ namespace SyrupPayJose.Jwa.Alg
 
         private static byte[] AesDec(byte[] sharedKey, byte[] cipherText)
         {
-            using (Aes aes = new AesManaged())
+            using (Rijndael aes = Rijndael.Create())
             {
                 aes.Key = sharedKey;
                 aes.Mode = CipherMode.ECB;
@@ -154,7 +153,14 @@ namespace SyrupPayJose.Jwa.Alg
 
         public static byte[] Concat(params byte[][] arrays)
         {
-            byte[] result = new byte[arrays.Sum(a => (a == null) ? 0 : a.Length)];
+            int length = 0;
+            foreach (byte[] array in arrays)
+            {
+                if (array == null) continue;
+                length += array.Length;
+            }
+
+            byte[] result = new byte[length];
             int offset = 0;
 
             foreach (byte[] array in arrays)

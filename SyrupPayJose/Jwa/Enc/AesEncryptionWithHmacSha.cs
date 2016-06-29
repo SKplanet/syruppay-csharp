@@ -31,19 +31,27 @@ namespace SyrupPayJose.Jwa.Enc
 
         public byte[] Encryption(byte[] key, byte[] iv, byte[] src)
         {
-            var ms = new MemoryStream();
+            using (Rijndael aes = Rijndael.Create())
+            {
+                aes.Key = key;
+                aes.IV = iv;
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.PKCS7;
 
-            var aes = new AesManaged();
-            aes.Mode = CipherMode.CBC;
-            aes.IV = iv;
-            aes.Key = key;
-            aes.Padding = PaddingMode.PKCS7;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+                    {
+                        using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                        {
+                            cs.Write(src, 0, src.Length);
+                            cs.FlushFinalBlock();
 
-            var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write);
-            cs.Write(src, 0, src.Length);
-            cs.Close();
-
-            return ms.ToArray();
+                            return ms.ToArray();
+                        }
+                    }
+                }
+            }
         }
 
         public byte[] Sign(byte[] key, byte[] iv, byte[] aad, byte[] src)
@@ -115,19 +123,27 @@ namespace SyrupPayJose.Jwa.Enc
 
         public byte[] Decryption(byte[] key, byte[] iv, byte[] src)
         {
-            var ms = new MemoryStream();
+            using (Rijndael aes = Rijndael.Create())
+            {
+                aes.Mode = CipherMode.CBC;
+                aes.IV = iv;
+                aes.Key = key;
+                aes.Padding = PaddingMode.PKCS7;
 
-            var aes = new AesManaged();
-            aes.Mode = CipherMode.CBC;
-            aes.IV = iv;
-            aes.Key = key;
-            aes.Padding = PaddingMode.PKCS7;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
+                    {
+                        using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
+                        {
+                            cs.Write(src, 0, src.Length);
+                            cs.FlushFinalBlock();
 
-            var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write);
-            cs.Write(src, 0, src.Length);
-            cs.Close();
-
-            return ms.ToArray();
+                            return ms.ToArray();
+                        }
+                    }
+                }
+            }
         }
     }
 }

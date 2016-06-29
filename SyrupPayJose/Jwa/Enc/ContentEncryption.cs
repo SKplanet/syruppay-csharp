@@ -32,13 +32,13 @@ namespace SyrupPayJose.Jwa.Enc
 
         public byte[] GenerateRandomIv()
         {
-            var aes = new AesManaged();
-            aes.KeySize = ivLength * 8;
-            aes.GenerateIV();
-
-            return aes.IV;
+            using (Rijndael aes = Rijndael.Create())
+            {
+                aes.KeySize = ivLength * 8;
+                aes.GenerateIV();
+                return aes.IV;
+            }
         }
-
 
         abstract public JweEncResult EncryptionAndSign(byte[] key, byte[] iv, byte[] src, byte[] aad);
         abstract public byte[] VerifyAndDecryption(byte[] key, byte[] iv, byte[] src, byte[] aad, byte[] expected);

@@ -5,7 +5,6 @@ using SyrupPayToken.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SyrupPayToken.Claims
@@ -13,12 +12,12 @@ namespace SyrupPayToken.Claims
     [JsonObject(MemberSerialization.OptIn)]
     public sealed class PayConfigurer<H> : AbstractTokenConfigurer<PayConfigurer<H>, H> where H : ITokenBuilder<H>
     {
-        private static HashSet<string> ISO_LANGUAGES;
-        private static HashSet<string> ISO_COUNTRIES;
+        private static List<string> ISO_LANGUAGES;
+        private static List<string> ISO_COUNTRIES;
 
         [JsonProperty]
         private string mctTransAuthId;
-        [JsonProperty]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mctDefinedValue;
         [JsonProperty]
         private PaymentInformationBySeller paymentInfo = new PaymentInformationBySeller();
@@ -35,7 +34,7 @@ namespace SyrupPayToken.Claims
 
         private void LoadLanguageByIso639()
         {
-            ISO_LANGUAGES = new HashSet<string>();
+            ISO_LANGUAGES = new List<string>();
             CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             foreach (var culture in cultures)
             {
@@ -45,18 +44,14 @@ namespace SyrupPayToken.Claims
 
         public static void LoadCountriesByIso3166()
         {
-            List<RegionInfo> countries = new List<RegionInfo>();
+            ISO_COUNTRIES = new List<String>();
             foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
                 RegionInfo country = new RegionInfo(culture.LCID);
-                if (countries.Where(p => p.Name == country.Name).Count() == 0)
-                    countries.Add(country);
-            }
-
-            ISO_COUNTRIES = new HashSet<String>();
-            foreach (RegionInfo regionInfo in countries)
-            {
-                ISO_COUNTRIES.Add(regionInfo.TwoLetterISORegionName);
+                if (!ISO_COUNTRIES.Contains(country.TwoLetterISORegionName))
+                {
+                    ISO_COUNTRIES.Add(country.TwoLetterISORegionName);
+                }
             }
         }
 
@@ -666,9 +661,9 @@ namespace SyrupPayToken.Claims
         {
             [JsonProperty]
             private string cardIssuerRegion = "ALLOWED:KOR";
-            [JsonProperty]
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             private string matchedUser;
-            [JsonProperty]
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             private string paymentType;
 
             public string CardIssuerRegion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SyrupPayToken.exception;
+using System;
 using System.Reflection;
 
 namespace SyrupPayToken.Utils
@@ -11,7 +12,7 @@ namespace SyrupPayToken.Utils
             
             if (!typeof(T).IsEnum)
             {
-                throw new TypeAccessException("Parameter(value) is should be Enum value.");
+                throw new InvalidTypeException("Parameter(value) is should be Enum value.");
             }
 
             Type type = value.GetType();

@@ -40,5 +40,20 @@ namespace SyrupPayJose.Jwa
                     throw new UnsupportedAlgorithmException("Unknown Jws Signature Algorithm");
             }
         }
+
+        public static JoseMethod GetAlgorithmType(string alg)
+        {
+            switch (EnumString.GetEnum(alg))
+            {
+                case JsonWebAlgorithm.A128KW:
+                    return JoseMethod.JWE;
+                case JsonWebAlgorithm.A256KW:
+                    return JoseMethod.JWE;
+                case JsonWebAlgorithm.HS256:
+                    return JoseMethod.JWS;
+                default:
+                    throw new UnsupportedAlgorithmException(alg+" is not supported");
+            }
+        }
     }
 }
