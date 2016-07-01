@@ -26,10 +26,12 @@ namespace SyrupPayJose.Jwa.Enc
         {
             if (cek == null)
             {
-                var aes = new AesManaged();
-                aes.KeySize = KeyBitLength;
-                aes.GenerateKey();
-                cek = aes.Key;
+                using (Rijndael aes = Rijndael.Create())
+                {
+                    aes.KeySize = KeyBitLength;
+                    aes.GenerateKey();
+                    cek = aes.Key;
+                }
             }
 
             return cek;

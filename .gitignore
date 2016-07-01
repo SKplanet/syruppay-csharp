@@ -188,5 +188,8 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-/SyrupPayJose/SyrupPayJose.*.nupkg
-/SyrupPayToken/SyrupPayToken.*.nupkg
+
+SyrupPayToken/package/*.nupkg
+SyrupPayToken/package/lib
+SyrupPayJose/package/*.nupkg
+*/*.nupkg

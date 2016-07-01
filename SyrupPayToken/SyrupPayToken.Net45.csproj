@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SyrupPayToken</RootNamespace>
     <AssemblyName>SyrupPayToken</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -17,8 +17,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug\net45\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\SyrupPayToken.XML</DocumentationFile>
@@ -26,8 +26,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release\net45\</OutputPath>
+    <DefineConstants>TRACE;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -39,14 +39,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -86,7 +82,7 @@
     <None Include="SyrupPayToken.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.csproj">
+    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.Net45.csproj">
       <Project>{85dfc960-8e01-4b97-812c-5a4f2511e4bf}</Project>
       <Name>SyrupPayJose</Name>
     </ProjectReference>

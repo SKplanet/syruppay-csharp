@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayJose", "SyrupPayJose\SyrupPayJose.csproj", "{85DFC960-8E01-4B97-812C-5A4F2511E4BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayJose", "SyrupPayJose\SyrupPayJose.Net40.csproj", "{85DFC960-8E01-4B97-812C-5A4F2511E4BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{4AEE8BBB-7CF4-40B0-B8D4-6973D56CA726}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.Net40.csproj", "{4AEE8BBB-7CF4-40B0-B8D4-6973D56CA726}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayToken", "SyrupPayToken\SyrupPayToken.csproj", "{62A85BFB-CED2-4803-AC8A-960825471E7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyrupPayToken", "SyrupPayToken\SyrupPayToken.Net40.csproj", "{62A85BFB-CED2-4803-AC8A-960825471E7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{3AB0EF5E-C5C5-4783-91F0-5F4EDB49CA6C}"
 EndProject

@@ -20,10 +20,28 @@ namespace SyrupPay.Sample
             string iss = "";        //시럽페이 발급 ID
 
             //거래 승인 요청 예제
-            RequestPaymentApproval(apiKey, encKey, iss);
+            Tuple<int, Dictionary<string, object>> approvalResponse = RequestPaymentApproval(apiKey, encKey, iss);
+            HandleResponse(approvalResponse);
 
             //거래 취소 요청 예제
-            RequestPaymentCancel(apiKey, encKey, iss);
+            Tuple<int, Dictionary<string, object>> cancelResponse = RequestPaymentCancel(apiKey, encKey, iss);
+            HandleResponse(cancelResponse);
+        }
+
+        public static void HandleResponse(Tuple<int, Dictionary<string, object>> response)
+        {
+            //응답 규격에 따른 결과 처리
+            Dictionary<string, object> result = null;
+            if (response.Item1 == 200)
+            {
+                result = response.Item2;
+            }
+            else
+            {
+                //response null일 경우 처리. ex) 암복호화 오류 등.
+                if (response.Item2 != null)
+                    result = response.Item2;
+            }
         }
 
         public static Tuple<int, Dictionary<string, object>> RequestPaymentApproval(string apiKey, string encKey, string iss)
@@ -242,4 +260,55 @@ namespace SyrupPay.Sample
             return Tuple.Create(statusCode, payload);
         }
     }
+
+#if !NET40 && !NET45
+    public class Tuple<T1>
+    {
+        public Tuple(T1 item1)
+        {
+            Item1 = item1;
+        }
+
+        public T1 Item1 { get; set; }
+    }
+
+    public class Tuple<T1, T2> : Tuple<T1>
+    {
+        public Tuple(T1 item1, T2 item2) : base(item1)
+        {
+            Item2 = item2;
+        }
+
+        public T2 Item2 { get; set; }
+    }
+
+    public class Tuple<T1, T2, T3> : Tuple<T1, T2>
+    {
+        public Tuple(T1 item1, T2 item2, T3 item3) : base(item1, item2)
+        {
+            Item3 = item3;
+        }
+
+        public T3 Item3 { get; set; }
+    }
+
+    public static class Tuple
+    {
+        public static Tuple<T1> Create<T1>(T1 item1)
+        {
+            return new Tuple<T1>(item1);
+        }
+
+        public static Tuple<T1, T2> Create<T1, T2>(T1 item1, T2 item2)
+        {
+            return new Tuple<T1, T2>(item1, item2);
+        }
+
+        public static Tuple<T1, T2, T3> Create<T1, T2, T3>(T1 item1, T2 item2, T3 item3)
+        {
+            return new Tuple<T1, T2, T3>(item1, item2, item3);
+        }
+    }
+#endif
+
 }
