@@ -43,6 +43,14 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SyrupPayJose, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1f96dde2b7879ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net40\SyrupPayJose.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SyrupPayToken, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5850b5dcd2d161c, processorArchitecture=MSIL">
+      <HintPath>..\packages\SyrupPayToken.0.1.6\lib\net40\SyrupPayToken.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
@@ -61,16 +69,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="SyrupPayComplus.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.csproj">
-      <Project>{85dfc960-8e01-4b97-812c-5a4f2511e4bf}</Project>
-      <Name>SyrupPayJose</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SyrupPayToken\SyrupPayToken.csproj">
-      <Project>{62a85bfb-ced2-4803-ac8a-960825471e7a}</Project>
-      <Name>SyrupPayToken</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
