@@ -8,6 +8,9 @@ using SyrupPayToken.Claims;
 using SyrupPayToken;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Net.Sockets;
 
 namespace SyrupPay.Sample
 {
@@ -49,7 +52,7 @@ namespace SyrupPay.Sample
             string url = "{baseAPIURL}/v1/api-basic/payment/approval";
 
             string payload = GetApprovalPayload(encKey, iss);
-            string authorization = "Basic "+apiKey;
+            string authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format("{0}:{1}", iss, apiKey)));
             Tuple<int, Dictionary<string, object>> result = Request(url, encKey, authorization, payload);
 
             return result;
@@ -60,7 +63,7 @@ namespace SyrupPay.Sample
             string url = "{baseAPIURL}/v1/api-basic/payment/refund";
 
             string payload = GetCancelPayload(encKey, iss);
-            string authorization = "Basic " + apiKey;
+            string authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format("{0}:{1}", iss, apiKey)));
             Tuple<int, Dictionary<string, object>> result = Request(url, encKey, authorization, payload);
 
             return result;
@@ -185,6 +188,7 @@ namespace SyrupPay.Sample
                .GenerateTokenBy(encKey);
         }
 
+#if NET40 || NET45
         public static Tuple<int, Dictionary<string, object>> Request(string url, string encKey, string authorization, string requestBody, bool isJose = true)
         {
             byte[] b = Encoding.UTF8.GetBytes(requestBody);
@@ -260,9 +264,167 @@ namespace SyrupPay.Sample
             return Tuple.Create(statusCode, payload);
         }
     }
+#else
+        class HttpResult
+        {
+            private int statusCode;
+            private string contentType;
+            private string responseBody;
 
-#if !NET40 && !NET45
-    public class Tuple<T1>
+            public int StatusCode
+            {
+                get { return statusCode; }
+                set { statusCode = value; }
+            }
+
+            public string ContentType
+            {
+                get { return contentType; }
+                set { contentType = value; }
+            }
+
+            public string ResponseBody
+            {
+                get { return responseBody; }
+                set { responseBody = value; }
+            }
+        }
+
+        static bool ValidateServerCertificate(
+              object sender,
+              X509Certificate certificate,
+              X509Chain chain,
+              SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        }
+
+        static Tuple<int, Dictionary<string, object>> Request(string url, string encKey, string authorization, string requestBody, bool isJose = true)
+        {
+            HttpResult httpResult = new HttpResult();
+            Dictionary<string, object> payload = null;
+
+            try
+            {
+                using (TcpClient client = new TcpClient(new Uri(url).Host, 443))
+                {
+                    using (SslStream sslStream = new SslStream(client.GetStream(), false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null))
+                    {
+                        sslStream.AuthenticateAsClient(String.Format("https://{0}/", new Uri(url).Host));
+                        string requestData = GetRequestData(url, authorization, requestBody, isJose);
+                        byte[] message = Encoding.UTF8.GetBytes(requestData);
+                        sslStream.Write(message, 0, message.Length);
+                        sslStream.Flush();
+
+                        httpResult = GetResponse(sslStream);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Exception: {0}", e.Message);
+            }
+            finally
+            {
+                if (!Object.ReferenceEquals(null, httpResult) && !String.IsNullOrEmpty(httpResult.ResponseBody))
+                {
+                    if (httpResult.ContentType.ToLower().IndexOf("jose") > 0)
+                    {
+                        Debug.WriteLine("JOSE Response: " + httpResult.ResponseBody);
+                        httpResult.ResponseBody = new Jose().Configuration(
+                        JoseBuilders.CompactDeserializationBuilder()
+                            .SerializedSource(httpResult.ResponseBody)
+                            .Key(encKey)
+                        ).Deserialization();
+                    }
+
+                    payload = JsonConvert.DeserializeObject<Dictionary<string, object>>(httpResult.ResponseBody);
+                }
+            }
+
+            Debug.WriteLine(String.Format("statusCode: {0}, Content-Type: {1}, ResponseBody: {2}",
+                httpResult.StatusCode, httpResult.ContentType, httpResult.ResponseBody));
+
+            return Tuple.Create(httpResult.StatusCode, payload);
+        }
+
+        static string GetRequestData(string url, string authorization, string requestBody, bool isJose = true)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(String.Format("POST {0} HTTP/1.1", new Uri(url).LocalPath));
+            if (isJose)
+            {
+                sb.AppendLine("Content-Type: application/jose; charset=utf-8");
+                sb.AppendLine("Accept: application/jose;charset=utf-8");
+            }
+            else
+            {
+                sb.AppendLine("Content-Type: application/json; charset=utf-8");
+                sb.AppendLine("Accept: application/json;charset=utf-8");
+            }
+
+            sb.AppendLine(String.Format("Authorization: {0}", authorization));
+            sb.AppendLine(String.Format("Host: {0}", new Uri(url).Host));
+            sb.AppendLine(String.Format("Content-Length: {0}", Encoding.UTF8.GetBytes(requestBody).Length));
+            sb.AppendLine("");
+            sb.AppendLine(requestBody);
+
+            return sb.ToString();
+        }
+
+        static HttpResult GetResponse(SslStream sslStream)
+        {
+            HttpResult httpResult = new HttpResult();
+            byte[] buffer = new byte[4096];
+            StringBuilder messageData = new StringBuilder();
+            int bytes = -1;
+            do
+            {
+                bytes = sslStream.Read(buffer, 0, buffer.Length);
+                Decoder decoder = Encoding.UTF8.GetDecoder();
+                char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
+                decoder.GetChars(buffer, 0, bytes, chars, 0);
+                messageData.Append(chars);
+                if (messageData.ToString().IndexOf("<EOF>") != -1)
+                {
+                    break;
+                }
+            } while (bytes != 0);
+
+            string[] headers = messageData.ToString().Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            httpResult.StatusCode = Int32.Parse(headers[0].Split(' ')[1]);
+
+            for (int i = 1; i < headers.Length; i++)
+            {
+                //header end
+                if (String.IsNullOrEmpty(headers[i]))
+                {
+                    break;
+                }
+
+                string[] token = headers[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                if (!String.IsNullOrEmpty(token[0]) && !String.IsNullOrEmpty(token[1]))
+                {
+                    if ((token[0].Equals("content-type", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        httpResult.ContentType = token[1];
+                    }
+                }
+            }
+
+            string[] headerAndBody = messageData.ToString().Split(new string[] { "\r\n\r\n" }, StringSplitOptions.None);
+            if (headerAndBody.Length == 2 && !String.IsNullOrEmpty(headerAndBody[1]))
+            {
+                httpResult.ResponseBody = headerAndBody[1];
+            }
+
+            return httpResult;
+        }
+    }
+#endif
+
+#if NET20 || NET35
+        public class Tuple<T1>
     {
         public Tuple(T1 item1)
         {
