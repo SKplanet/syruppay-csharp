@@ -334,9 +334,9 @@ namespace SyrupPay
                 throw new IllegalArgumentException("when you try to login or sign up, mctUserId couldn't be null. you should set mctUserId");
 
             if (!Object.ReferenceEquals(null, userInfoMapper) &&
-                String.IsNullOrEmpty(userInfoMapper.mappingType) ||
-                String.IsNullOrEmpty(userInfoMapper.mappingValue))
-                throw new IllegalArgumentException("mappingType fields to map couldn't be null. type : " + userInfoMapper.mappingType + "value : " + userInfoMapper.mappingValue);
+                (String.IsNullOrEmpty(userInfoMapper.mappingType) ||
+                String.IsNullOrEmpty(userInfoMapper.mappingValue)))
+                throw new IllegalArgumentException("mappingType fields to map couldn't be null. type : " + userInfoMapper.mappingType + " value : " + userInfoMapper.mappingValue);
 
             if (!Object.ReferenceEquals(null, userInfoMapper) &&
                 !String.Equals("CI_MAPPED_KEY", userInfoMapper.mappingType) &&

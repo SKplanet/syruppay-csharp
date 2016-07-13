@@ -18,9 +18,9 @@ namespace SyrupPay.Sample
     {
         static void Main(string[] args)
         {
-            string apiKey = "";     //API Authorization
-            string encKey = "";     //JWS, JWE 암복호화 키
-            string iss = "";        //시럽페이 발급 ID
+            string apiKey = "syrupPay_API_Key";     //시럽페이가 발행하는 API Key
+            string encKey = "syrupPay_Secret";      //시럽페이가 발급하는 Secret
+            string iss = "syrupPay_merchantID";     //시럽페이 발급하는 가맹점 ID
 
             //거래 승인 요청 예제
             Tuple<int, Dictionary<string, object>> approvalResponse = RequestPaymentApproval(apiKey, encKey, iss);
@@ -52,7 +52,7 @@ namespace SyrupPay.Sample
             string url = "{baseAPIURL}/v1/api-basic/payment/approval";
 
             string payload = GetApprovalPayload(encKey, iss);
-            string authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format("{0}:{1}", iss, apiKey)));
+            string authorization = "Basic " + apiKey;
             Tuple<int, Dictionary<string, object>> result = Request(url, encKey, authorization, payload);
 
             return result;
@@ -63,7 +63,7 @@ namespace SyrupPay.Sample
             string url = "{baseAPIURL}/v1/api-basic/payment/refund";
 
             string payload = GetCancelPayload(encKey, iss);
-            string authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(String.Format("{0}:{1}", iss, apiKey)));
+            string authorization = "Basic " + apiKey;
             Tuple<int, Dictionary<string, object>> result = Request(url, encKey, authorization, payload);
 
             return result;
@@ -71,7 +71,7 @@ namespace SyrupPay.Sample
 
         public static string GetApprovalPayload(string encKey, string iss, bool isJose = true)
         {
-            //배포된 규격서의 거래승인요청 전문에 따라 구성
+            //배포된 규격서의 거래승인요청 전문에 따라 구성해야 합니다. 아래는 예제 Sample
             var approvalPayload = new Dictionary<string, object>();
             approvalPayload["mctRequestId"] = "";
             approvalPayload["mctRequestTime"] = 0;
@@ -102,6 +102,7 @@ namespace SyrupPay.Sample
             //using Newtonsoft.Json package
             var payload = JsonConvert.SerializeObject(approvalPayload);
 
+            // Syrup Pay규격에 따라 Request Body를 암호화 합니다.
             if (isJose)
             {
                 payload = new Jose().Configuration(
@@ -117,7 +118,7 @@ namespace SyrupPay.Sample
 
         public static string GetCancelPayload(string encKey, string iss, bool isJose = true)
         {
-            //배포된 규격서의 취소요청 전문에 따라 구성
+            //배포된 규격서의 취소요청 전문에 따라 구성해야 합니다. 아래는 예제 Sample 입니다.
             var cancelPayload = new Dictionary<string, object>();
             cancelPayload["mctRequestId"] = "";
             cancelPayload["mctRequestTime"] = 0;
@@ -129,6 +130,7 @@ namespace SyrupPay.Sample
             //using Newtonsoft.Json package
             var payload = JsonConvert.SerializeObject(cancelPayload);
 
+            // Syrup Pay규격에 따라 Request Body를 암호화 합니다.
             if (isJose)
             {
                 payload = new Jose().Configuration(
@@ -142,52 +144,52 @@ namespace SyrupPay.Sample
             return payload;
         }
 
+        // Syrup Pay의 거래인증시 전달해야 되는 Token 정보를 생성합니다.
         public static string GetMCTTAToken(string encKey, string iss)
         {
             ///시럽페이 Token 라이브러리를 이용한 Token 생성
             return new SyrupPayTokenBuilder().Of(iss)
                .Login()
                    .WithMerchantUserId("loginInfo.mctUserId")
-                   .WithExtraMerchantUserId("loginInfo.extraUserId")
-                   .WithSsoCredential("loginInfo.SSOCredential")
-                   .WithDeviceIdentifier("loginInfo.deviceIdentifier")
+                   .WithExtraMerchantUserId("loginInfo.extraUserId")  //Optional 입니다. 
+                   .WithSsoCredential("loginInfo.SSOCredential")      //SSOCredential 정보는 시럽페이가 제공하는 REST API를 통해 값이 정상적으로 전달된 경우 Setting 합니다.
+                   .WithDeviceIdentifier("loginInfo.deviceIdentifier")  //Optional 입니다. 
                .And()
-               .MapToSyrupPayUser()
-                   .WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_HASH)
-                   //.WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_MAPPED_KEY)
-                   .WithValue("userInfoMapper.mappingValue")
+               .MapToSyrupPayUser()   //Optional 입니다.
+                   .WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_HASH) // Optional 입니다.
+                                                                                                    //.WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_MAPPED_KEY) 
+                   .WithValue("userInfoMapper.mappingValue")   //Optional 압니다.
                .And()
                .Pay()
-                    .WithOrderIdOfMerchant("transactionInfo.mctTransAuthId")
-                    .WithMerchantDefinedValue("transactionInfo.mctDefinedValue")
-                    .WithProductTitle("transactionInfo.paymentInfo.productTitle")
-                    .WithProductUrls("https://www.sample.com")
-                    .WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)    //transactionInfo.paymentInfo.lang
-                    .WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)             //transactionInfo.paymentInfo.currencyCode
-                    .WithAmount(1000)                                                           //transactionInfo.paymentInfo.paymentAmt
-                                                                                                //transactionInfo.paymentInfo.shippingAddress
-                    .WithShippingAddress(new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("Zipcode", "Main Address", "Detail Address", "City", "", "kr"))
-                    .WithDeliveryPhoneNumber("transactionInfo.paymentInfo.deliveryPhoneNumber")
-                    .WithDeliveryName("transactionInfo.paymentInfo.deliveryName")
-                    .WithInstallmentPerCardInformation(
+                    .WithOrderIdOfMerchant("transactionInfo.mctTransAuthId")     // 가맹점에서 발행하는 거래인증 요청 ID입니다 거래 인증 요청시 마다 Unique한 값이여야 합니다.
+                    .WithMerchantDefinedValue("transactionInfo.mctDefinedValue") // Optional 입니다. 
+                    .WithProductTitle("transactionInfo.paymentInfo.productTitle") // 상품명 정보 입니다.
+                    .WithProductUrls("https://www.sample.com")   // 상품의 URL 정보 입니다.
+                    .WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)    //한글을 사용합니다.
+                    .WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)             //화폐단위는 원화 입니다.
+                    .WithAmount(1000)                                                           //결제 요청 금액 입니다.
+
+                    .WithShippingAddress(
+                        new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("Zipcode", "Main Address", "Detail Address", "City", "", "kr")
+                    )  // Optional 입니다. 배송지 주소 입니다. 
+                    .WithDeliveryPhoneNumber("transactionInfo.paymentInfo.deliveryPhoneNumber") //Optional 입니다. 받는 사람 전화번호 입니다.
+                    .WithDeliveryName("transactionInfo.paymentInfo.deliveryName")  //Optioanl 입니다. 받는사랍 이름 입니다.
+                    .WithInstallmentPerCardInformation(  // Optional 힙니다.
                         new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("11", "NN1;NN2;YY3;YY4;YY5;NH6"),
                         new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("22", "NN1;NN2;YY3;YY4;YY5;NH6")
                     )  //transaction.paymentInfo.cardInfoList
-                    .WithBeAbleToExchangeToCash(false)  //transaction.paymentInfo.isExchangeable
-                                                        //transaction.paymentRestrictions.cardIssuerRegion
-                    .WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR)
-               //.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_USA)
-               //.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_NOT_ALLOED_KOR)
-               //.WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_NOT_ALLOED_USA)
+                    .WithBeAbleToExchangeToCash(false)  //Optional 입니다.
+
+                    .WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR) // 국내 CARD를 허용합니다.
                .And()
-               .Subscription()
-                    .WithAutoPaymentId("subscription.autoPaymentId")
-                    //subscription.registrationRestrictions.matchedUser
-                    .WithMatchedUser(PayConfigurer<SyrupPayTokenBuilder>.MatchedUser.CI_MATCHED_ONLY)
+               .Subscription()  //Optional 입니다. 자동결제 등록시에만 사용합니다.
+                    .WithAutoPaymentId("subscription.autoPaymentId")  // Optional 입니다. 자동결제 등록 ID 입니다. 
+                    .WithMatchedUser(PayConfigurer<SyrupPayTokenBuilder>.MatchedUser.CI_MATCHED_ONLY)  // Optional 입니다.자동결제 제약 조건입니다. 
                 .And()
                .GenerateTokenBy(encKey);
         }
 
+// .NET4.0~ .NET4.5 인경우와  그 이하 버전을 분기처리 합니다. 가맹점에서 수정이 필요 없이 그대로 사용하면 됩니다.
 #if NET40 || NET45
         public static Tuple<int, Dictionary<string, object>> Request(string url, string encKey, string authorization, string requestBody, bool isJose = true)
         {

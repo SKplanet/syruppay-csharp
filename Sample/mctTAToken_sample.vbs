@@ -2,6 +2,11 @@ Option Explicit
 
 Dim lUnixtime
 Dim objMctTAToken
+Dim apiKey, encKey, iss
+
+apiKey = "syrupPay_API_Key"     '시럽페이가 발행하는 API Key
+encKey = "syrupPay_Secret"      '시럽페이가 발급하는 Secret
+iss = "syrupPay_merchantID"     '시럽페이 발급하는 가맹점 ID
 
 lUnixtime = DateDiff("s", "01/01/1970 00:00:00", Now())
 
@@ -10,33 +15,33 @@ With objMctTAToken
 .Iss = "syruppay"
 .Iat = lUnixtime
 .MctUserId = "merchantId"
-.ExtraUserId = "extraUserId"
-.ImplicitSSOSeed = "seed"
-.SSOCredential = "SSO"
-.DeviceIdentifier = "deviceId"
-.MappingType = "CI_HASH"
-.MappingValue = "CI"
+.ExtraUserId = "extraUserId"       'optional
+.ImplicitSSOSeed = "seed"          'optional
+.SSOCredential = "SSO"             'optional
+.DeviceIdentifier = "deviceId"     'optional
+.MappingType = "CI_HASH"           'optional
+.MappingValue = "CI"               'optional
 .MctTransAuthId = "authId"
-.MctDefinedValue = "definedValue"
+.MctDefinedValue = "definedValue"  'optional
 .ProductTitle = "title"
 .ProductUrl = "http://sample.com"
 .ProductUrl = "http://productUrl.com"
 .Lang = "ko"
 .CurrencyCode = "KRW"
 .PaymentAmt = 1000
-.ShippingAddress = "a2:kr|137-332|서울 서초구 잠원동 하나아파트|1동 1호||"
-.DeliveryPhoneNumber = "01041110194"
-.DeliveryName = "Test"
-.AddCardInfo "11", "NN1;NN2;YY3;YY4;YY5;NH6"
-.AddCardInfo "22", "YY2;NN2;YY3;YY4;YY5;NH6"
-.IsExchangeable = true
+.ShippingAddress = "a2:kr|137-332|서울 서초구 잠원동 하나아파트|1동 1호||"    'optional
+.DeliveryPhoneNumber = "01041110194"           'optional
+.DeliveryName = "Test"                         'optional
+.AddCardInfo "11", "NN1;NN2;YY3;YY4;YY5;NH6"   'optional
+.AddCardInfo "22", "YY2;NN2;YY3;YY4;YY5;NH6"   'optional
+.IsExchangeable = true                         'optional
 .CardIssuerRegion = "ALLOWED:kor"
-.PaymentInfoMatchedUser = "CI_MATCHED_ONLY"
-.AutoPaymentId = "Auto"
-.AutoPaymentMatchedUser = "CI_MATCHED_ONLY"
+.PaymentInfoMatchedUser = "CI_MATCHED_ONLY"    'optional
+.AutoPaymentId = "Auto"                        'optional
+.AutoPaymentMatchedUser = "CI_MATCHED_ONLY"    'optional
 End With
 
 WScript.Echo objMctTAToken.ToJson()
-WScript.Echo objMctTAToken.Serialzie("12345678901234567890123456789012")
+WScript.Echo objMctTAToken.Serialzie(encKey)
 
 Set objMctTAToken = Nothing

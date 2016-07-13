@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SyrupPay.Sample</RootNamespace>
     <AssemblyName>Sample</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -37,15 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net20\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SyrupPayJose, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1f96dde2b7879ecf, processorArchitecture=MSIL">
-      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net20\SyrupPayJose.dll</HintPath>
+      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net40\SyrupPayJose.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SyrupPayToken, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5850b5dcd2d161c, processorArchitecture=MSIL">
-      <HintPath>..\packages\SyrupPayToken.0.1.6\lib\net20\SyrupPayToken.dll</HintPath>
+      <HintPath>..\packages\SyrupPayToken.0.1.6\lib\net40\SyrupPayToken.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,7 +62,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="JOSE_sample.vbs" />
