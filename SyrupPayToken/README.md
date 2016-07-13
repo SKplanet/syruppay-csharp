@@ -2,8 +2,8 @@
 
 시럽페이 서비스에서 가맹점 인증 및 데이터 교환을 위한 규격을 정의하며 전송 구간에 대한 암호화 및 무결성 보장을 위한 토큰을 생성, 관리하는 기능을 수행합니다.
 
-## Required
-.NET Framework 4.0 or later
+## Supported Framework
+.NET Framework 2.0, 3.5, 4.0, 4.5
 
 ## Installation
 ### NuGet
