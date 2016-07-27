@@ -15,30 +15,30 @@ With objMctTAToken
 .Iss = "syruppay"
 .Iat = lUnixtime
 .MctUserId = "merchantId"
-.ExtraUserId = "extraUserId"       'optional
-.ImplicitSSOSeed = "seed"          'optional
+'.ExtraUserId = "extraUserId"       'optional
+'.ImplicitSSOSeed = "seed"          'optional
 .SSOCredential = "SSO"             'optional
-.DeviceIdentifier = "deviceId"     'optional
-.MappingType = "CI_HASH"           'optional
-.MappingValue = "CI"               'optional
+'.DeviceIdentifier = "deviceId"     'optional
+'.MappingType = "CI_HASH"           'optional
+'.MappingValue = "CI"               'optional
 .MctTransAuthId = "authId"
-.MctDefinedValue = "definedValue"  'optional
+'.MctDefinedValue = "definedValue"  'optional
 .ProductTitle = "title"
 .ProductUrl = "http://sample.com"
 .ProductUrl = "http://productUrl.com"
 .Lang = "ko"
 .CurrencyCode = "KRW"
 .PaymentAmt = 1000
-.ShippingAddress = "a2:kr|137-332|서울 서초구 잠원동 하나아파트|1동 1호||"    'optional
-.DeliveryPhoneNumber = "01041110194"           'optional
-.DeliveryName = "Test"                         'optional
-.AddCardInfo "11", "NN1;NN2;YY3;YY4;YY5;NH6"   'optional
-.AddCardInfo "22", "YY2;NN2;YY3;YY4;YY5;NH6"   'optional
-.IsExchangeable = true                         'optional
+'.ShippingAddress = "a2:kr|137-332|서울 서초구 잠원동 하나아파트|1동 1호||"    'optional
+'.DeliveryPhoneNumber = "01041110194"           'optional
+'.DeliveryName = "Test"                         'optional
+'.AddCardInfo "11", "NN1;NN2;YY3;YY4;YY5;NH6"   'optional
+'.AddCardInfo "22", "YY2;NN2;YY3;YY4;YY5;NH6"   'optional
+'.IsExchangeable = true                         'optional
 .CardIssuerRegion = "ALLOWED:kor"
-.PaymentInfoMatchedUser = "CI_MATCHED_ONLY"    'optional
-.AutoPaymentId = "Auto"                        'optional
-.AutoPaymentMatchedUser = "CI_MATCHED_ONLY"    'optional
+'.PaymentInfoMatchedUser = "CI_MATCHED_ONLY"    'optional
+'.AutoPaymentId = "Auto"                        'optional
+'.AutoPaymentMatchedUser = "CI_MATCHED_ONLY"    'optional
 End With
 
 WScript.Echo objMctTAToken.ToJson()

@@ -71,14 +71,14 @@ namespace SyrupPay
         private long exp;
         [JsonProperty]
         private long iat;
-        [JsonProperty]
-        private LoginInfo loginInfo = new LoginInfo();
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private UserInfoMapper userInfoMapper;
-        [JsonProperty]
-        private TransactionInfo transactionInfo = new TransactionInfo();
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private Subscription subscription;
+        [JsonProperty(PropertyName = "loginInfo", NullValueHandling = NullValueHandling.Ignore)]
+        private LoginInfo loginInfoClaim = new LoginInfo();
+        [JsonProperty(PropertyName = "userInfoMapper", NullValueHandling = NullValueHandling.Ignore)]
+        private UserInfoMapper userInfoMapperClaim;
+        [JsonProperty(PropertyName = "transactionInfo", NullValueHandling = NullValueHandling.Ignore)]
+        private TransactionInfo transactionInfoClaim;
+        [JsonProperty(PropertyName = "subscription", NullValueHandling = NullValueHandling.Ignore)]
+        private Subscription subscriptionClaim;
 
         public string Iss
         {
@@ -99,6 +99,26 @@ namespace SyrupPay
                 iat = value;
                 exp = iat + 600;
             }
+        }
+
+        private LoginInfo loginInfo
+        {
+            get { return loginInfoClaim == null ? loginInfoClaim = new LoginInfo() : loginInfoClaim; }
+        }
+
+        private UserInfoMapper userInfoMapper
+        {
+            get { return userInfoMapperClaim == null ? userInfoMapperClaim = new UserInfoMapper() : userInfoMapperClaim; }
+        }
+
+        private TransactionInfo transactionInfo
+        {
+            get { return transactionInfoClaim == null ? transactionInfoClaim = new TransactionInfo() : transactionInfoClaim; }
+        }
+
+        private Subscription subscription
+        {
+            get { return subscriptionClaim == null ? subscriptionClaim = new Subscription() : subscriptionClaim; }
         }
 
         public string MctUserId
@@ -133,30 +153,14 @@ namespace SyrupPay
 
         public string MappingType
         {
-            get
-            {
-                if (userInfoMapper == null) return "";
-                else return userInfoMapper.mappingType;
-            }
-            set
-            {
-                if (userInfoMapper == null) userInfoMapper = new UserInfoMapper();
-                userInfoMapper.mappingType = value;
-            }
+            get { return userInfoMapper.mappingType; }
+            set { userInfoMapper.mappingType = value; }
         }
 
         public string MappingValue
         {
-            get
-            {
-                if (userInfoMapper == null) return "";
-                else return userInfoMapper.mappingValue;
-            }
-            set
-            {
-                if (userInfoMapper == null) userInfoMapper = new UserInfoMapper();
-                userInfoMapper.mappingValue = value;
-            }
+            get { return userInfoMapper.mappingValue; }
+            set { userInfoMapper.mappingValue = value; }
         }
 
         public string MctTransAuthId
@@ -296,12 +300,7 @@ namespace SyrupPay
                 if (subscription == null) return "";
                 else return subscription.autoPaymentId;
             }
-            set
-            {
-                if (subscription == null)
-                    subscription = new Subscription();
-                subscription.autoPaymentId = value;
-            }
+            set { subscription.autoPaymentId = value; }
         }
 
         public string AutoPaymentMatchedUser
@@ -314,9 +313,6 @@ namespace SyrupPay
             }
             set
             {
-                if (subscription == null)
-                    subscription = new Subscription();
-
                 if (subscription.registrationRestrictions == null)
                     subscription.registrationRestrictions = new RegistrationRestrictions();
 
@@ -329,40 +325,17 @@ namespace SyrupPay
             if (iat == 0 || exp == 0)
                 throw new IllegalArgumentException("iat, exp is required field.");
 
-            if (Object.ReferenceEquals(null, loginInfo) ||
-                String.IsNullOrEmpty(loginInfo.mctUserId))
-                throw new IllegalArgumentException("when you try to login or sign up, mctUserId couldn't be null. you should set mctUserId");
+            loginInfoClaim.validate();
 
-            if (!Object.ReferenceEquals(null, userInfoMapper) &&
-                (String.IsNullOrEmpty(userInfoMapper.mappingType) ||
-                String.IsNullOrEmpty(userInfoMapper.mappingValue)))
-                throw new IllegalArgumentException("mappingType fields to map couldn't be null. type : " + userInfoMapper.mappingType + " value : " + userInfoMapper.mappingValue);
-
-            if (!Object.ReferenceEquals(null, userInfoMapper) &&
-                !String.Equals("CI_MAPPED_KEY", userInfoMapper.mappingType) &&
-                !String.Equals("CI_HASH", userInfoMapper.mappingType))
-                throw new IllegalArgumentException("mappingType must be one of CI_MAPPED_KEY, CI_HASH");
-
-            if (String.IsNullOrEmpty(transactionInfo.mctTransAuthId) ||
-                String.IsNullOrEmpty(transactionInfo.paymentInfo.productTitle) ||
-                String.IsNullOrEmpty(transactionInfo.paymentInfo.lang) ||
-                String.IsNullOrEmpty(transactionInfo.paymentInfo.currencyCode) ||
-                transactionInfo.paymentInfo.paymentAmt <= 0)
+            if (!Object.ReferenceEquals(null, userInfoMapperClaim))
             {
-                throw new IllegalArgumentException("some of required fields is null or wrong. " +
-                        "you should set mctTransAuthId : " + transactionInfo.mctTransAuthId
-                        + ",  productTitle : " + transactionInfo.paymentInfo.productTitle
-                        + ",  lang : " + transactionInfo.paymentInfo.lang
-                        + ",  currencyCode : " + transactionInfo.paymentInfo.currencyCode
-                        + ",  paymentAmt : " + transactionInfo.paymentInfo.paymentAmt
-                );
+                userInfoMapper.validate();
             }
 
-            if (transactionInfo.mctTransAuthId.Length > 40)
-                throw new IllegalArgumentException("order id of merchant couldn't be longer than 40. but yours is " + transactionInfo.mctTransAuthId.Length);
-
-            if (!String.IsNullOrEmpty(transactionInfo.mctDefinedValue) && transactionInfo.mctDefinedValue.Length > 1024)
-                throw new IllegalArgumentException("merchant define value's length couldn't be bigger than 1024. but yours is " + transactionInfo.mctDefinedValue.Length);
+            if (!Object.ReferenceEquals(null, transactionInfoClaim))
+            {
+                transactionInfoClaim.validate();
+            }
 
             return JsonConvert.SerializeObject(this);
         }
@@ -385,6 +358,12 @@ namespace SyrupPay
             public string SSOCredential;
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public string deviceIdentifier;
+
+            public void validate()
+            {
+                if (mctUserId == null)
+                    throw new IllegalArgumentException("when you try to login or sign up, mctUserId couldn't be null. you should set mctUserId");
+            }
         }
 
         class UserInfoMapper
@@ -393,6 +372,16 @@ namespace SyrupPay
             public string mappingType;
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public string mappingValue;
+
+            internal void validate()
+            {
+                if (String.IsNullOrEmpty(mappingType) ||String.IsNullOrEmpty(mappingValue))
+                    throw new IllegalArgumentException(String.Format("mappingType fields to map couldn't be null. type : {0} value : {1}", mappingType, mappingValue));
+
+                if (!String.Equals("CI_MAPPED_KEY", mappingType) && !String.Equals("CI_HASH", mappingType))
+                    throw new IllegalArgumentException("mappingType must be one of CI_MAPPED_KEY, CI_HASH");
+
+            }
         }
 
         class TransactionInfo
@@ -405,6 +394,31 @@ namespace SyrupPay
             public PaymentInfo paymentInfo = new PaymentInfo();
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public PaymentRestrictions paymentRestrictions;
+
+            internal void validate()
+            {
+                if (String.IsNullOrEmpty(mctTransAuthId) ||
+                    String.IsNullOrEmpty(paymentInfo.productTitle) ||
+                    String.IsNullOrEmpty(paymentInfo.lang) ||
+                    String.IsNullOrEmpty(paymentInfo.currencyCode) ||
+                    paymentInfo.paymentAmt <= 0)
+                {
+                    throw new IllegalArgumentException("some of required fields is null or wrong. " +
+                            "you should set mctTransAuthId : " + mctTransAuthId
+                            + ",  productTitle : " + paymentInfo.productTitle
+                            + ",  lang : " + paymentInfo.lang
+                            + ",  currencyCode : " + paymentInfo.currencyCode
+                            + ",  paymentAmt : " + paymentInfo.paymentAmt
+                    );
+                }
+
+                if (mctTransAuthId.Length > 40)
+                    throw new IllegalArgumentException("order id of merchant couldn't be longer than 40. but yours is " + mctTransAuthId.Length);
+
+                if (!String.IsNullOrEmpty(mctDefinedValue) && mctDefinedValue.Length > 1024)
+                    throw new IllegalArgumentException("merchant define value's length couldn't be bigger than 1024. but yours is " + mctDefinedValue.Length);
+
+            }
         }
 
         class PaymentInfo
