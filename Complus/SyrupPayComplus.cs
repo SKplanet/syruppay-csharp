@@ -293,6 +293,21 @@ namespace SyrupPay
             }
         }
 
+        public string PaymentType
+        {
+            get
+            {
+                if (transactionInfo.paymentRestrictions == null) return "";
+                else return transactionInfo.paymentRestrictions.paymentType;
+            }
+            set
+            {
+                if (transactionInfo.paymentRestrictions == null)
+                    transactionInfo.paymentRestrictions = new PaymentRestrictions();
+                transactionInfo.paymentRestrictions.paymentType = value;
+            }
+        }
+
         public string AutoPaymentId
         {
             get
@@ -322,8 +337,7 @@ namespace SyrupPay
 
         public string ToJson()
         {
-            if (iat == 0 || exp == 0)
-                throw new IllegalArgumentException("iat, exp is required field.");
+            this.Iat = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
             loginInfoClaim.validate();
 
@@ -466,6 +480,8 @@ namespace SyrupPay
             public string cardIssuerRegion;
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public string matchedUser;
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string paymentType;
         }
 
         class Subscription

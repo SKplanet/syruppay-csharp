@@ -88,7 +88,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.Net45.csproj">
+    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.Net40.csproj">
       <Project>{85dfc960-8e01-4b97-812c-5a4f2511e4bf}</Project>
       <Name>SyrupPayJose</Name>
     </ProjectReference>

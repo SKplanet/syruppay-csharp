@@ -70,8 +70,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="autopayment_token_sample.vbs" />
     <Content Include="JOSE_sample.vbs" />
+    <Content Include="JOSE_validation_sample.vbs" />
+    <Content Include="login_token_sample.vbs" />
     <Content Include="mctTAToken_sample.vbs" />
+    <Content Include="transaction_token_sample.vbs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
