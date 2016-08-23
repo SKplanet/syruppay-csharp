@@ -14,7 +14,19 @@ using SyrupPayToken.exception;
 [assembly: ApplicationAccessControl(false)]
 namespace SyrupPay
 {
-    public class JoseSerializer : ServicedComponent
+    public interface IJoseSeriazlier
+    {
+        string toJwe(string iss, string alg, string enc, string key, string payload);
+        string toJws(string iss, string alg, string key, string payload);
+    }
+
+    public interface IJoseDeserizlier
+    {
+        string fromJose(string key, string src);
+    }
+
+    [ClassInterface(ClassInterfaceType.None)]
+    public class JoseSerializer : ServicedComponent, IJoseSeriazlier
     {
         public string toJwe(string iss, string alg, string enc, string key, string payload)
         {
@@ -46,7 +58,8 @@ namespace SyrupPay
         }
     }
 
-    public class JoseDeserializer : ServicedComponent
+    [ClassInterface(ClassInterfaceType.None)]
+    public class JoseDeserializer : ServicedComponent, IJoseDeserizlier
     {
         public string fromJose(string key, string src)
         {
@@ -58,8 +71,40 @@ namespace SyrupPay
         }
     }
 
+    public interface IMctTAToken
+    {
+        string Iss { set; }
+        string MctUserId { set; }
+        string ExtraUserId { set; }
+        string ImplicitSSOSeed { set; }
+        string SSOCredential { set; }
+        string DeviceIdentifier { set; }
+        string MappingType { set; }
+        string MappingValue { set; }
+        string MctTransAuthId { set; }
+        string MctDefinedValue { set; }
+        string ProductTitle { set; }
+        string ProductUrl { set; }
+        string Lang { set; }
+        string CurrencyCode { set; }
+        long PaymentAmt { set; }
+        string ShippingAddress { set; }
+        string DeliveryPhoneNumber { set; }
+        string DeliveryName { set; }
+        void AddCardInfo(string cardCode, string monthlyInstallmentInfo);
+        bool IsExchangeable { set; }
+        string CardIssuerRegion { set; }
+        string PaymentInfoMatchedUser { set; }
+        string PaymentType { set; }
+        string AutoPaymentId { set; }
+        string AutoPaymentMatchedUser { set; }
+        string ToJson();
+        string Serialzie(string key);
+    }
+
+    [ClassInterface(ClassInterfaceType.None)]
     [JsonObject(MemberSerialization.OptIn)]
-    public sealed class MctTAToken : ServicedComponent
+    public sealed class MctTAToken : ServicedComponent, IMctTAToken
     {
         [JsonProperty]
         private string iss;
@@ -82,18 +127,11 @@ namespace SyrupPay
 
         public string Iss
         {
-            get { return iss; }
             set { iss = value; }
         }
 
-        public long Exp
+        private long Iat
         {
-            get { return exp; }
-        }
-
-        public long Iat
-        {
-            get { return iat; }
             set
             {
                 iat = value;
@@ -123,61 +161,51 @@ namespace SyrupPay
 
         public string MctUserId
         {
-            get { return loginInfo.mctUserId; }
             set { loginInfo.mctUserId = value; }
         }
 
         public string ExtraUserId
         {
-            get { return loginInfo.extraUserId; }
             set { loginInfo.extraUserId = value; }
         }
 
         public string ImplicitSSOSeed
         {
-            get { return loginInfo.implicitSSOSeed; }
             set { loginInfo.implicitSSOSeed = value; }
         }
 
         public string SSOCredential
         {
-            get { return loginInfo.SSOCredential; }
             set { loginInfo.SSOCredential = value; }
         }
 
         public string DeviceIdentifier
         {
-            get { return loginInfo.deviceIdentifier; }
             set { loginInfo.deviceIdentifier = value; }
         }
 
         public string MappingType
         {
-            get { return userInfoMapper.mappingType; }
             set { userInfoMapper.mappingType = value; }
         }
 
         public string MappingValue
         {
-            get { return userInfoMapper.mappingValue; }
             set { userInfoMapper.mappingValue = value; }
         }
 
         public string MctTransAuthId
         {
-            get { return transactionInfo.mctTransAuthId; }
             set { transactionInfo.mctTransAuthId = value; }
         }
 
         public string MctDefinedValue
         {
-            get { return transactionInfo.mctDefinedValue; }
             set { transactionInfo.mctDefinedValue = value; }
         }
 
         public string ProductTitle
         {
-            get { return transactionInfo.paymentInfo.productTitle; }
             set { transactionInfo.paymentInfo.productTitle = value; }
         }
 
@@ -191,44 +219,33 @@ namespace SyrupPay
             }
         }
 
-        public List<string> ProductUrls
-        {
-            get { return transactionInfo.paymentInfo.productUrls; }
-        }
-
         public string Lang
         {
-            get { return transactionInfo.paymentInfo.lang; }
             set { transactionInfo.paymentInfo.lang = value; }
         }
 
         public string CurrencyCode
         {
-            get { return transactionInfo.paymentInfo.currencyCode; }
             set { transactionInfo.paymentInfo.currencyCode = value; }
         }
 
         public long PaymentAmt
         {
-            get { return transactionInfo.paymentInfo.paymentAmt; }
             set { transactionInfo.paymentInfo.paymentAmt = value; }
         }
 
         public string ShippingAddress
         {
-            get { return transactionInfo.paymentInfo.shippingAddress; }
             set { transactionInfo.paymentInfo.shippingAddress = value; }
         }
 
         public string DeliveryPhoneNumber
         {
-            get { return transactionInfo.paymentInfo.deliveryPhoneNumber; }
             set { transactionInfo.paymentInfo.deliveryPhoneNumber = value; }
         }
 
         public string DeliveryName
         {
-            get { return transactionInfo.paymentInfo.deliveryName; }
             set { transactionInfo.paymentInfo.deliveryName = value; }
         }
 
@@ -240,36 +257,13 @@ namespace SyrupPay
             transactionInfo.paymentInfo.cardInfoList.Add(new CardInfo(cardCode, monthlyInstallmentInfo));
         }
 
-        public List<Hashtable> getCardInfo()
-        {
-            if (transactionInfo.paymentInfo.cardInfoList == null)
-                return null;
-
-            List<Hashtable> hts = new List<Hashtable>();
-
-            transactionInfo.paymentInfo.cardInfoList.ForEach(c => {
-                Hashtable ht = new Hashtable();
-                ht.Add("cardCode", c.cardCode);
-                ht.Add("monthlyInstallmentInfo", c.monthlyInstallmentInfo);
-                hts.Add(ht);
-            });
-
-            return hts;
-        }
-
         public bool IsExchangeable
         {
-            get { return transactionInfo.paymentInfo.isExchangeable; }
             set { transactionInfo.paymentInfo.isExchangeable = value; }
         }
 
         public string CardIssuerRegion
         {
-            get
-            {
-                if (transactionInfo.paymentRestrictions == null) return "";
-                else return transactionInfo.paymentRestrictions.cardIssuerRegion;
-            }
             set
             {
                 if (transactionInfo.paymentRestrictions == null)
@@ -280,11 +274,6 @@ namespace SyrupPay
 
         public string PaymentInfoMatchedUser
         {
-            get
-            {
-                if (transactionInfo.paymentRestrictions == null) return "";
-                else return transactionInfo.paymentRestrictions.matchedUser;
-            }
             set
             {
                 if (transactionInfo.paymentRestrictions == null)
@@ -295,11 +284,6 @@ namespace SyrupPay
 
         public string PaymentType
         {
-            get
-            {
-                if (transactionInfo.paymentRestrictions == null) return "";
-                else return transactionInfo.paymentRestrictions.paymentType;
-            }
             set
             {
                 if (transactionInfo.paymentRestrictions == null)
@@ -310,22 +294,11 @@ namespace SyrupPay
 
         public string AutoPaymentId
         {
-            get
-            {
-                if (subscription == null) return "";
-                else return subscription.autoPaymentId;
-            }
             set { subscription.autoPaymentId = value; }
         }
 
         public string AutoPaymentMatchedUser
         {
-            get
-            {
-                if (subscription == null) return "";
-                else if (subscription.registrationRestrictions == null) return "";
-                else return subscription.registrationRestrictions.matchedUser;
-            }
             set
             {
                 if (subscription.registrationRestrictions == null)
