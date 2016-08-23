@@ -1,6 +1,5 @@
 Option Explicit
 
-Dim lUnixtime
 Dim objMctTAToken
 Dim apiKey, encKey, iss
 
@@ -8,12 +7,9 @@ apiKey = "syrupPay_API_Key"     '시럽페이가 발행하는 API Key
 encKey = "syrupPay_Secret"      '시럽페이가 발급하는 Secret
 iss = "syrupPay_merchantID"     '시럽페이 발급하는 가맹점 ID
 
-lUnixtime = DateDiff("s", "01/01/1970 00:00:00", Now())
-
 Set objMctTAToken = CreateObject("SyrupPay.MctTAToken")
 With objMctTAToken
 .Iss = "syruppay"
-.Iat = lUnixtime
 .MctUserId = "merchantId"
 '.ExtraUserId = "extraUserId"       'optional
 '.ImplicitSSOSeed = "seed"          'optional

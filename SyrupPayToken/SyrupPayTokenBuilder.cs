@@ -248,13 +248,26 @@ namespace SyrupPayToken
         /// <exception cref="IllegalArgumentException">claim 생성중 오류 발생</exception>
         public String GenerateTokenBy(String secret)
         {
+            return GenerateTokenBy(secret, ToJson());
+        }
+
+        /// <summary>
+        /// JWT(JWS-RFC7515) 토큰을 생성하여 반환한다.
+        /// </summary>
+        /// <param name="secret">>Signing 할 Secret</param>
+        /// <param name="json">Singing 할 payload</param>
+        /// <returns>JWT</returns>
+        /// <exception cref="JsonOperationException">json serialize 오류</exception>
+        /// <exception cref="IllegalArgumentException">claim 생성중 오류 발생</exception>
+        public String GenerateTokenBy(String secret, String json)
+        {
             var h = new JoseHeader(JsonWebAlgorithm.HS256, JsonWebAlgorithm.NONE, iss);
             h.SetHeader(JoseHeaderSpec.TYP, "JWT");
 
             return new Jose().Configuration(
                 JoseBuilders.JsonSignatureCompactSerializationBuilder()
                     .Header(h)
-                    .Payload(ToJson())
+                    .Payload(json)
                     .Key(secret)
                 ).Serialization();
         }
@@ -271,7 +284,7 @@ namespace SyrupPayToken
             return GenerateTokenBy(StringUtils.ByteToString(secret));
         }
 
-        protected String ToJson()
+        public String ToJson()
         {
             JObject o = (JObject)JToken.FromObject(Build());
 

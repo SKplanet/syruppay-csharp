@@ -192,9 +192,21 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public PayConfigurer<H> WithPayableRuleWithCard(string cardIssuerRegion)
+        {
+            paymentRestrictions.CardIssuerRegion = cardIssuerRegion;
+            return this;
+        }
+
         public PayConfigurer<H> WithMatchedUser(MatchedUser m)
         {
             paymentRestrictions.MatchedUser = EnumString<MatchedUser>.GetValue(m);
+            return this;
+        }
+
+        public PayConfigurer<H> WithMatchedUser(string matchedUser)
+        {
+            paymentRestrictions.MatchedUser = matchedUser;
             return this;
         }
 
@@ -278,6 +290,7 @@ namespace SyrupPayToken.Claims
             private int defaultDeliveryCost;
             private int additionalDeliveryCost;
             private int orderApplied;
+            private string fullAddressFormat;
 
             public ShippingAddress(string zipCode, string mainAddress, string detailAddress, string city, string state, string countryCode)
             {
@@ -463,10 +476,15 @@ namespace SyrupPayToken.Claims
                 return this;
             }
 
-            public string MapToStringForFds { get { return GetMapToStringForFds(); } }
+            public string MapToStringForFds
+            {
+                set { fullAddressFormat = value; }
+                get { return GetMapToStringForFds(); }
+            }
             public string GetMapToStringForFds()
             {
-                return countryCode + "|" + zipCode + "|" + mainAddress + "|" + detailAddress + "|" + city + "|" + state + "|";
+                fullAddressFormat = String.Format("{0}|{1}|{2}|{3}|{4}|{5}|", countryCode, zipCode, mainAddress, detailAddress, city, state);
+                return fullAddressFormat;
             }
 
             public void ValidRequiredToCheckout()
