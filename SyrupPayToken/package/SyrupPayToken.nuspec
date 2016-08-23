@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>SyrupPayToken</id>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
     <title>SyrupPayToken Library</title>
     <authors>SKplanet</authors>
     <owners>SKplanet</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/skplanet/syruppay-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <releaseNotes>NET20, NET35, NET40, NET45 is Supported.</releaseNotes>
+    <releaseNotes>Add subscription column</releaseNotes>
     <description>SyrupPayToken creation library</description>
     <copyright>Copyright 2015</copyright>
     <tags>Syrup SyrupPay Token SyrupPayToken</tags>

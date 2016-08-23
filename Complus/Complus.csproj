@@ -48,7 +48,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SyrupPayToken, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5850b5dcd2d161c, processorArchitecture=MSIL">
-      <HintPath>..\packages\SyrupPayToken.0.1.6\lib\net40\SyrupPayToken.dll</HintPath>
+      <HintPath>..\packages\SyrupPayToken.0.1.7\lib\net40\SyrupPayToken.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
