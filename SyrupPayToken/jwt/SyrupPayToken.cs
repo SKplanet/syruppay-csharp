@@ -22,7 +22,6 @@ namespace SyrupPayToken.jwt
         private MerchantUserConfigurer<H> loginInfo = null;
         private PayConfigurer<H> transactionInfo = null;
         private MapToSyrupPayUserConfigurer<H> userInfoMapper = null;
-        private MapToSktUserConfigurer<H> lineInfo = null;
         private OrderConfigurer<H> checkoutInfo = null;
         private SubscriptionConfigurer<H> subscription = null;
 
@@ -39,11 +38,6 @@ namespace SyrupPayToken.jwt
         public MapToSyrupPayUserConfigurer<H> UserInfoMapper
         {
             get { return GetUserInfoMapper();}
-        }
-
-        public MapToSktUserConfigurer<H> LineInfo
-        {
-            get { return GetLineInfo(); }
         }
 
         public OrderConfigurer<H> CheckoutInfo
@@ -181,11 +175,6 @@ namespace SyrupPayToken.jwt
         public MapToSyrupPayUserConfigurer<H> GetUserInfoMapper()
         {
             return userInfoMapper;
-        }
-
-        public MapToSktUserConfigurer<H> GetLineInfo()
-        {
-            return lineInfo;
         }
 
         public SubscriptionConfigurer<H> GetSubscription()

@@ -197,15 +197,6 @@ namespace SyrupPayToken
         }
 
         /// <summary>
-        /// SKT 사용자인 시럽페이 사용자 맵핑을 위한 설정 객체를 확인하여 반환한다.
-        /// </summary>
-        /// <returns><see cref="MapToSktUserConfigurer{H}"/></returns>
-        public MapToSktUserConfigurer<SyrupPayTokenBuilder> MapToSktUser()
-        {
-            return GetOrApply(new MapToSktUserConfigurer<SyrupPayTokenBuilder>());
-        }
-
-        /// <summary>
         /// 자동결제를 위한 설정 객체를 확인하여 반환한다.
         /// </summary>
         /// <returns><see cref="SubscriptionConfigurer{H}"/></returns>

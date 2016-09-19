@@ -55,7 +55,6 @@
     <Compile Include="AbstractConfiguredTokenBuilder.cs" />
     <Compile Include="ClaimConfigurerAdapter.cs" />
     <Compile Include="Claims\AbstractTokenConfigurer.cs" />
-    <Compile Include="Claims\MapToSktUserConfigurer.cs" />
     <Compile Include="Claims\MapToSyrupPayUserConfigurer.cs" />
     <Compile Include="Claims\MerchantUserConfigurer.cs" />
     <Compile Include="Claims\OrderConfigurer.cs" />
