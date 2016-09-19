@@ -7,7 +7,6 @@ namespace SyrupPayToken.Claims
     [JsonObject(MemberSerialization.Fields)]
     public sealed class MerchantUserConfigurer<H> : AbstractTokenConfigurer<MerchantUserConfigurer<H>, H> where H : ITokenBuilder<H>
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mctUserId;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string extraUserId;

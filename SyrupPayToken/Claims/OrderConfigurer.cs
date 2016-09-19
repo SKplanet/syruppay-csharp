@@ -13,11 +13,14 @@ namespace SyrupPayToken.Claims
     {
         private int productPrice;
         private string submallName;
+        private string privacyPolicyRequirements;
+        private bool mainShippingAddressSettingDisabled;
         private ProductDeliveryInfo productDeliveryInfo;
         private List<Offer> offerList = new List<Offer>();
         private List<Loyalty> loyaltyList = new List<Loyalty>();
         private List<PayConfigurer<H>.ShippingAddress> shippingAddressList = new List<PayConfigurer<H>.ShippingAddress>();
         private List<MonthlyInstallment> monthlyInstallmentList = new List<MonthlyInstallment>();
+        private List<Bank> bankInfoList = new List<Bank>();
 
         public ReadOnlyCollection<MonthlyInstallment> GetMonthlyInstallmentList()
         {
@@ -37,6 +40,21 @@ namespace SyrupPayToken.Claims
         public ProductDeliveryInfo GetProductDeliveryInfo()
         {
             return productDeliveryInfo;
+        }
+
+        public string GetPrivacyPolicyRequirements()
+        {
+            return privacyPolicyRequirements;
+        }
+
+        public bool IsMainShippingAddressSettingDisabled()
+        {
+            return mainShippingAddressSettingDisabled;
+        }
+
+        public List<Bank> GetBankInfoList()
+        {
+            return bankInfoList;
         }
 
         public override string ClaimName()
@@ -153,6 +171,36 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public OrderConfigurer<H> WithPrivacyPolicyRequirements(string privacyPolicyRequirements)
+        {
+            this.privacyPolicyRequirements = privacyPolicyRequirements;
+            return this;
+        }
+
+        public OrderConfigurer<H> disableMainShippingAddressSetting()
+        {
+            this.mainShippingAddressSettingDisabled = true;
+            return this;
+        }
+
+        public OrderConfigurer<H> enableMainShippingAddressSetting()
+        {
+            this.mainShippingAddressSettingDisabled = false;
+            return this;
+        }
+
+        public OrderConfigurer<H> WithBankInfoList(List<Bank> bankInfoList)
+        {
+            this.bankInfoList = bankInfoList;
+            return this;
+        }
+
+        public OrderConfigurer<H> WithBankInfoList(params Bank[] bankInfoList)
+        {
+            this.bankInfoList = new List<Bank>(bankInfoList);
+            return this;
+        }
+
         public List<Offer> GetOfferList()
         {
             return offerList;
@@ -192,12 +240,7 @@ namespace SyrupPayToken.Claims
 
         public enum AcceptType
         {
-            NONE, CARD
-        }
-
-        public enum DeliveryType
-        {
-            NONE, PREPAID, FREE, DIY, QUICK, PAYMENT_ON_DELIVERY
+            UNDEFINED, CARD, BANK, MOBILE, SYRUP_PAY_COUPON
         }
 
         interface Element
@@ -208,7 +251,7 @@ namespace SyrupPayToken.Claims
         public sealed class Accept : Element
         {
             [JsonConverter(typeof(StringEnumConverter))]
-            private AcceptType type = AcceptType.NONE;
+            private AcceptType type = AcceptType.UNDEFINED;
             private List<Dictionary<String, Object>> conditions = new List<Dictionary<String, Object>>();
 
             public new AcceptType GetType()
@@ -235,7 +278,7 @@ namespace SyrupPayToken.Claims
 
             public void ValidRequired()
             {
-                if (type == AcceptType.NONE)
+                if (type == AcceptType.UNDEFINED)
                 {
                     throw new IllegalArgumentException("Accept object couldn't be with null fields.");
                 }
@@ -251,7 +294,7 @@ namespace SyrupPayToken.Claims
         public sealed class ProductDeliveryInfo : Element
         {
             [JsonConverter(typeof(StringEnumConverter))]
-            private DeliveryType deliveryType = DeliveryType.NONE;
+            private DeliveryType deliveryType = DeliveryType.UNDEFINED;
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             private string deliveryName;
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -318,7 +361,7 @@ namespace SyrupPayToken.Claims
 
             public void ValidRequired()
             {
-                if (deliveryType == DeliveryType.NONE || String.IsNullOrEmpty(deliveryName))
+                if (deliveryType == DeliveryType.UNDEFINED || String.IsNullOrEmpty(deliveryName))
                 {
                     throw new IllegalArgumentException("ProductDeliveryInfo object couldn't be with null fields. deliveryType : " + deliveryType + ", deliveryName : " + deliveryName);
                 }
@@ -335,6 +378,7 @@ namespace SyrupPayToken.Claims
             private int amountOff;
             private bool userSelectable;
             private int orderApplied;
+            private bool applicableForNotMatchedUser;
             private string exclusiveGroupId;
             private string exclusiveGroupName;
             private List<Accept> accepted = new List<Accept>();
@@ -359,6 +403,17 @@ namespace SyrupPayToken.Claims
                 m.Add("minPaymentAmt", minPaymentAmt);
                 a.GetConditions().Add(m);
                 accepted.Add(a);
+                return this;
+            }
+
+            public bool isApplicableForNotMatchedUser()
+            {
+                return applicableForNotMatchedUser;
+            }
+
+            public Offer SetApplicableForNotMatchedUser(bool applicableForNotMatchedUser)
+            {
+                this.applicableForNotMatchedUser = applicableForNotMatchedUser;
                 return this;
             }
 
@@ -573,6 +628,7 @@ namespace SyrupPayToken.Claims
             private int maxApplicableAmt;
             private int initialAppliedAmt;
             private int orderApplied;
+            private bool applicableForNotMatchedUser;
             private AdditionalDiscount additionalDiscount;
             private Error error;
             private string exclusiveGroupId;
@@ -699,6 +755,17 @@ namespace SyrupPayToken.Claims
             public Loyalty SetOrderApplied(int orderApplied)
             {
                 this.orderApplied = orderApplied;
+                return this;
+            }
+
+            public bool IsApplicableForNotMatchedUser()
+            {
+                return applicableForNotMatchedUser;
+            }
+
+            public Loyalty SetApplicableForNotMatchedUser(bool applicableForNotMatchedUser)
+            {
+                this.applicableForNotMatchedUser = applicableForNotMatchedUser;
                 return this;
             }
 

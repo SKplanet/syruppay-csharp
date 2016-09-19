@@ -17,6 +17,9 @@ namespace SyrupPayToken.Claims
 
         [JsonProperty]
         private string mctTransAuthId;
+        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private CashReceiptDisplay cashReceiptDisplay;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mctDefinedValue;
         [JsonProperty]
@@ -75,6 +78,10 @@ namespace SyrupPayToken.Claims
             return mctDefinedValue;
         }
 
+        public CashReceiptDisplay GetCashReceiptDisplay()
+        {
+            return cashReceiptDisplay;
+        }
 
         public PaymentInformationBySeller GetPaymentInfo()
         {
@@ -95,6 +102,12 @@ namespace SyrupPayToken.Claims
         public PayConfigurer<H> WithMerchantDefinedValue(string merchantDefinedValue)
         {
             this.mctDefinedValue = merchantDefinedValue;
+            return this;
+        }
+
+        public PayConfigurer<H> WithCashReceiptDisplay(CashReceiptDisplay cashReceiptDisplay)
+        {
+            this.cashReceiptDisplay = cashReceiptDisplay;
             return this;
         }
 
@@ -168,6 +181,12 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public PayConfigurer<H> WithDeliveryType(DeliveryType deliveryType)
+        {
+            paymentInfo.DeliveryType = deliveryType;
+            return this;
+        }
+
         public PayConfigurer<H> WithBeAbleToExchangeToCash(bool exchangeable)
         {
             paymentInfo.Exchangeable = exchangeable;
@@ -183,6 +202,19 @@ namespace SyrupPayToken.Claims
         public PayConfigurer<H> WithInstallmentPerCardInformation(params CardInstallmentInformation[] card)
         {
             paymentInfo.AddCardInfoList = new List<CardInstallmentInformation>(card);
+            return this;
+        }
+
+
+        public PayConfigurer<H> WithBankInfoList(List<Bank> bankInfoList)
+        {
+            paymentInfo.AddBankInfoList = bankInfoList;
+            return this;
+        }
+
+        public PayConfigurer<H> WithBankInfoList(params Bank[] bankInfoList)
+        {
+            paymentInfo.AddBankInfoList = new List<Bank>(bankInfoList);
             return this;
         }
 
@@ -216,6 +248,7 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+
         public override string ClaimName()
         {
             return "transactionInfo";
@@ -242,6 +275,11 @@ namespace SyrupPayToken.Claims
 
             if (!String.IsNullOrEmpty(this.mctTransAuthId) && mctTransAuthId.Length > 1024)
                 throw new IllegalArgumentException("merchant define value's length couldn't be bigger than 1024. but yours is " + mctDefinedValue.Length);
+        }
+
+        public enum CashReceiptDisplay
+        {
+            YES, NO, DELEGATE_ADMIN
         }
 
         public enum Language
@@ -561,8 +599,13 @@ namespace SyrupPayToken.Claims
             private string deliveryPhoneNumber;
             [JsonProperty]
             private string deliveryName;
+            [JsonProperty]
+            [JsonConverter(typeof(StringEnumConverter))]
+            private DeliveryType deliveryType;
             [JsonProperty("isExchangeable")]
             private bool isExchangeable;
+            [JsonProperty]
+            private List<Bank> bankInfoList = new List<Bank>();
 
             public string ProductTitle
             {
@@ -647,6 +690,12 @@ namespace SyrupPayToken.Claims
                 return deliveryName;
             }
 
+            public DeliveryType DeliveryType
+            {
+                get { return deliveryType; }
+                set { deliveryType = value; }
+            }
+
             public bool Exchangeable
             {
                 get { return isExchangeable; }
@@ -665,6 +714,13 @@ namespace SyrupPayToken.Claims
             public List<CardInstallmentInformation> GetCardInfoList()
             {
                 return cardInfoList;
+            }
+
+            public List<Bank> AddBankInfoList { set { bankInfoList.AddRange(value); } }
+            public List<Bank> BankInfoList
+            {
+                get { return bankInfoList; }
+                set { bankInfoList = value; }
             }
 
             [Obsolete]
@@ -717,6 +773,35 @@ namespace SyrupPayToken.Claims
         {
             [Description("CI_MATCHED_ONLY")]
             CI_MATCHED_ONLY
+        }
+    }
+
+    public enum DeliveryType
+    {
+        UNDEFINED, PREPAID, FREE, DIY, QUICK, PAYMENT_ON_DELIVERY
+    }
+
+    public sealed class Bank
+    {
+        private string bankCode;
+
+        public string BankCode
+        {
+            get { return bankCode; }
+            set { bankCode = value; }
+        }
+
+        public Bank SetBankCode(params string[] bankCodes)
+        {
+            foreach (string bankCode in bankCodes)
+            {
+                if (this.bankCode == null)
+                    this.bankCode = bankCode;
+                else
+                    this.bankCode += ":" + bankCode;
+            }
+
+            return this;
         }
     }
 }
