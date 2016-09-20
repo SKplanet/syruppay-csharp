@@ -36,16 +36,16 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net20\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SyrupPayJose, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1f96dde2b7879ecf, processorArchitecture=MSIL">
-      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net20\SyrupPayJose.dll</HintPath>
+      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net45\SyrupPayJose.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SyrupPayToken, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5850b5dcd2d161c, processorArchitecture=MSIL">
-      <HintPath>..\packages\SyrupPayToken.0.1.6\lib\net20\SyrupPayToken.dll</HintPath>
+      <HintPath>..\packages\SyrupPayToken.0.1.8\lib\net45\SyrupPayToken.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
