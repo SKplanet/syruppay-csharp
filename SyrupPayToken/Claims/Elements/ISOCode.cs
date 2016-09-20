@@ -6,8 +6,8 @@ namespace SyrupPayToken.Claims
 {
     public class ISOCode
     {
-        private static HashSet<string> ISO_LANGUAGES;
-        private static HashSet<string> ISO_COUNTRIES;
+        private static List<string> ISO_LANGUAGES;
+        private static List<string> ISO_COUNTRIES;
 
         static ISOCode()
         {
@@ -19,7 +19,7 @@ namespace SyrupPayToken.Claims
 
         private static void LoadLanguageByIso639()
         {
-            ISO_LANGUAGES = new HashSet<string>();
+            ISO_LANGUAGES = new List<string>();
             CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             foreach (var culture in cultures)
             {
@@ -29,7 +29,7 @@ namespace SyrupPayToken.Claims
 
         private static void LoadCountriesByIso3166()
         {
-            ISO_COUNTRIES = new HashSet<String>();
+            ISO_COUNTRIES = new List<string>();
             foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
                 RegionInfo country = new RegionInfo(culture.LCID);
