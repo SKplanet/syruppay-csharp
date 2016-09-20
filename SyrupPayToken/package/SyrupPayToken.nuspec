@@ -2,14 +2,23 @@
 <package >
   <metadata>
     <id>SyrupPayToken</id>
-    <version>0.1.7</version>
+    <version>0.1.8</version>
     <title>SyrupPayToken Library</title>
     <authors>SKplanet</authors>
     <owners>SKplanet</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/skplanet/syruppay-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <releaseNotes>Add subscription column</releaseNotes>
+    <releaseNotes>
+    1. New element class is created at checkout, transactionInfo claim's inner class
+    2. SKT user token claim is deleted
+    3. Add field
+     - identityAuthenticationId
+     - privacyPolicyRequirements
+     - mainShippingAddressSettingDisabled
+     - bankInfoList
+     - cashReceiptDisplay
+    </releaseNotes>
     <description>SyrupPayToken creation library</description>
     <copyright>Copyright 2015</copyright>
     <tags>Syrup SyrupPay Token SyrupPayToken</tags>

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using SyrupPayToken.Utils;
-using static SyrupPayToken.Claims.PayConfigurer<SyrupPayToken.SyrupPayTokenBuilder>;
 
 namespace SyrupPayToken.Claims
 {
@@ -16,6 +15,27 @@ namespace SyrupPayToken.Claims
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private RegistrationRestrictions registrationRestrictions;
 
+        private Plan GetOrNewPlan
+        {
+            get
+            {
+                if (plan == null)
+                    plan = new Plan();
+                return plan;
+            }
+        }
+
+        private RegistrationRestrictions GetOrNewRegistrationRestrictions
+        {
+            get
+            {
+                if (registrationRestrictions == null)
+                    registrationRestrictions = new RegistrationRestrictions();
+
+                return registrationRestrictions;
+            }
+        }
+
         public SubscriptionConfigurer<H> WithMerchantSubscriptionId(string mctSubscriptRequestId)
         {
             this.mctSubscriptRequestId = mctSubscriptRequestId;
@@ -28,68 +48,23 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
-        private RegistrationRestrictions GetRegistrationRestrictionsOrCreate()
+        public SubscriptionConfigurer<H> WithPlanInterval(SubscriptionInterval i)
         {
-            if (registrationRestrictions == null)
-                registrationRestrictions = new RegistrationRestrictions();
-
-            return registrationRestrictions;
+            GetOrNewPlan.Interval = EnumString<SubscriptionInterval>.GetValue(i);
+            return this;
         }
+
+        public SubscriptionConfigurer<H> WithPlanName(string name)
+        {
+            GetOrNewPlan.Name = name;
+            return this;
+        }
+
 
         public SubscriptionConfigurer<H> WithMatchedUser(MatchedUser m)
         {
-            GetRegistrationRestrictionsOrCreate().MatchedUser = EnumString<MatchedUser>.GetValue(m);
+            GetOrNewRegistrationRestrictions.MatchedUser = EnumString<MatchedUser>.GetValue(m);
             return this;
-        }
-
-        private Plan GetPlanOrCreate()
-        {
-            if (plan == null)
-                plan = new Plan();
-
-            return plan;
-        }
-
-        public SubscriptionConfigurer<H> WithInterval(SubscriptionInterval i)
-        {
-            GetPlanOrCreate().Interval = EnumString<SubscriptionInterval>.GetValue(i);
-            return this;
-        }
-
-        public SubscriptionConfigurer<H> WithServiceName(string name)
-        {
-            GetPlanOrCreate().Name = name;
-            return this;
-        }
-
-        public string GetAutoPaymentId()
-        {
-            return autoPaymentId;
-        }
-
-        public string GetMatchedUser()
-        {
-            return GetRegistrationRestrictionsOrCreate().MatchedUser;
-        }
-
-        public string AutoPaymentId
-        {
-            get { return autoPaymentId; }
-        }
-
-        public string MatchedUserOfRestrictions
-        {
-            get { return GetRegistrationRestrictionsOrCreate().MatchedUser; }
-        }
-
-        public string Interval
-        {
-            get { return GetPlanOrCreate().Interval; }
-        }
-
-        public string ServiceName
-        {
-            get { return GetPlanOrCreate().Name; }
         }
 
         public override string ClaimName()
@@ -99,52 +74,8 @@ namespace SyrupPayToken.Claims
 
         public override void ValidRequired()
         {
-        }
-
-        public enum SubscriptionInterval
-        {
-            [Description("ONDEMAND")]
-            ONDEMAND,
-            [Description("MONTHLY")]
-            MONTHLY,
-            [Description("WEEKLY")]
-            WEEKLY,
-            [Description("BIWEEKLY")]
-            BIWEEKLY
-        }
-    }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public sealed class Plan
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private string interval;
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private string name;
-
-        public string Interval
-        {
-            get { return interval; }
-            set { interval = value; }
-        }
-
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-    }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public sealed class RegistrationRestrictions
-    {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private string matchedUser;
-
-        public string MatchedUser
-        {
-            get { return matchedUser; }
-            set { matchedUser = value; }
+            if (plan != null)
+                plan.ValidRequired();
         }
     }
 }

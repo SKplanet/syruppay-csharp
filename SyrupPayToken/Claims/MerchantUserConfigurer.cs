@@ -7,7 +7,6 @@ namespace SyrupPayToken.Claims
     [JsonObject(MemberSerialization.Fields)]
     public sealed class MerchantUserConfigurer<H> : AbstractTokenConfigurer<MerchantUserConfigurer<H>, H> where H : ITokenBuilder<H>
     {
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mctUserId;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string extraUserId;
@@ -17,33 +16,6 @@ namespace SyrupPayToken.Claims
         private String ssoCredential;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private String deviceIdentifier;
-
-        public string GetMctUserId()
-        {
-            return mctUserId;
-        }
-
-        public string GetExtraUserId()
-        {
-            return extraUserId;
-        }
-
-        [Obsolete]
-        public string GetImplicitSSOSeed()
-        {
-            return implicitSSOSeed;
-        }
-
-        public string GetSSOCredential()
-        {
-            return ssoCredential;
-        }
-
-        public MerchantUserConfigurer<H> WithSsoCredential(String ssoCredential)
-        {
-            this.ssoCredential = ssoCredential;
-            return this;
-        }
 
         public MerchantUserConfigurer<H> WithMerchantUserId(String merchantUserId)
         {
@@ -61,6 +33,12 @@ namespace SyrupPayToken.Claims
         public MerchantUserConfigurer<H> WithImplicitSSOSeed(String implicitSSOSeed)
         {
             this.implicitSSOSeed = implicitSSOSeed;
+            return this;
+        }
+
+        public MerchantUserConfigurer<H> WithSsoCredential(String ssoCredential)
+        {
+            this.ssoCredential = ssoCredential;
             return this;
         }
 

@@ -42,6 +42,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SyrupPayJose, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1f96dde2b7879ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net40\SyrupPayJose.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -51,7 +55,23 @@
     <Compile Include="AbstractConfiguredTokenBuilder.cs" />
     <Compile Include="ClaimConfigurerAdapter.cs" />
     <Compile Include="Claims\AbstractTokenConfigurer.cs" />
-    <Compile Include="Claims\MapToSktUserConfigurer.cs" />
+    <Compile Include="Claims\Elements\Accept.cs" />
+    <Compile Include="Claims\Elements\AdditionalDiscount.cs" />
+    <Compile Include="Claims\Elements\Bank.cs" />
+    <Compile Include="Claims\Elements\CardInstallmentInformation.cs" />
+    <Compile Include="Claims\Elements\Element.cs" />
+    <Compile Include="Claims\Elements\Enums.cs" />
+    <Compile Include="Claims\Elements\Error.cs" />
+    <Compile Include="Claims\Elements\ISOCode.cs" />
+    <Compile Include="Claims\Elements\Loyalty.cs" />
+    <Compile Include="Claims\Elements\MonthlyInstallment.cs" />
+    <Compile Include="Claims\Elements\Offer.cs" />
+    <Compile Include="Claims\Elements\PaymentInformationBySeller.cs" />
+    <Compile Include="Claims\Elements\PaymentRestriction.cs" />
+    <Compile Include="Claims\Elements\Plan.cs" />
+    <Compile Include="Claims\Elements\ProductDeliveryInfo.cs" />
+    <Compile Include="Claims\Elements\RegistrationRestrictions.cs" />
+    <Compile Include="Claims\Elements\ShippingAddress.cs" />
     <Compile Include="Claims\MapToSyrupPayUserConfigurer.cs" />
     <Compile Include="Claims\MerchantUserConfigurer.cs" />
     <Compile Include="Claims\OrderConfigurer.cs" />
@@ -80,12 +100,6 @@
     </None>
     <None Include="README.md" />
     <None Include="SyrupPayToken.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.Net40.csproj">
-      <Project>{85dfc960-8e01-4b97-812c-5a4f2511e4bf}</Project>
-      <Name>SyrupPayJose</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

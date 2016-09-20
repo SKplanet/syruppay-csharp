@@ -18,9 +18,6 @@ namespace SyrupPayToken.jwt
 
         bool IsValidInTimes();
 
-        MapToSktUserConfigurer<H> LineInfo { get; }
-        MapToSktUserConfigurer<H> GetLineInfo();
-
         OrderConfigurer<H> CheckoutInfo { get; }
         OrderConfigurer<H> GetCheckoutInfo();
 

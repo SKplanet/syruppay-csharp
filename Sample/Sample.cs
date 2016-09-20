@@ -156,35 +156,126 @@ namespace SyrupPay.Sample
                    .WithDeviceIdentifier("loginInfo.deviceIdentifier")  //Optional 입니다. 
                .And()
                .MapToSyrupPayUser()   //Optional 입니다.
-                   .WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_HASH) // Optional 입니다.
+                   .WithType(MappingType.CI_HASH) // Optional 입니다.
                                                                                                     //.WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_MAPPED_KEY) 
                    .WithValue("userInfoMapper.mappingValue")   //Optional 압니다.
+                   .WithIdentityAuthenticationId("userInfoMapper.identityAuthenticationId")
                .And()
                .Pay()
                     .WithOrderIdOfMerchant("transactionInfo.mctTransAuthId")     // 가맹점에서 발행하는 거래인증 요청 ID입니다 거래 인증 요청시 마다 Unique한 값이여야 합니다.
+                    .WithCashReceiptDisplay(CashReceiptDisplay.NO)
                     .WithMerchantDefinedValue("transactionInfo.mctDefinedValue") // Optional 입니다. 
                     .WithProductTitle("transactionInfo.paymentInfo.productTitle") // 상품명 정보 입니다.
                     .WithProductUrls("https://www.sample.com")   // 상품의 URL 정보 입니다.
-                    .WithLanguageForDisplay(PayConfigurer<SyrupPayTokenBuilder>.Language.KO)    //한글을 사용합니다.
-                    .WithCurrency(PayConfigurer<SyrupPayTokenBuilder>.Currency.KRW)             //화폐단위는 원화 입니다.
+                    .WithLanguageForDisplay(Language.KO)    //한글을 사용합니다.
+                    .WithCurrency(Currency.KRW)             //화폐단위는 원화 입니다.
                     .WithAmount(1000)                                                           //결제 요청 금액 입니다.
 
                     .WithShippingAddress(
-                        new PayConfigurer<SyrupPayTokenBuilder>.ShippingAddress("Zipcode", "Main Address", "Detail Address", "City", "", "kr")
+                        new ShippingAddress("Zipcode", "Main Address", "Detail Address", "City", "", "kr")
                     )  // Optional 입니다. 배송지 주소 입니다. 
                     .WithDeliveryPhoneNumber("transactionInfo.paymentInfo.deliveryPhoneNumber") //Optional 입니다. 받는 사람 전화번호 입니다.
                     .WithDeliveryName("transactionInfo.paymentInfo.deliveryName")  //Optioanl 입니다. 받는사랍 이름 입니다.
+                    .WithDeliveryType(DeliveryType.FREE)
                     .WithInstallmentPerCardInformation(  // Optional 힙니다.
-                        new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("11", "NN1;NN2;YY3;YY4;YY5;NH6"),
-                        new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation("22", "NN1;NN2;YY3;YY4;YY5;NH6")
+                        new CardInstallmentInformation("11", "NN1;NN2;YY3;YY4;YY5;NH6"),
+                        new CardInstallmentInformation("22", "NN1;NN2;YY3;YY4;YY5;NH6")
                     )  //transaction.paymentInfo.cardInfoList
+                    .WithBankInfoList(
+                        new Bank().SetBankCode("002", "011")
+                    )
                     .WithBeAbleToExchangeToCash(false)  //Optional 입니다.
 
-                    .WithPayableRuleWithCard(PayConfigurer<SyrupPayTokenBuilder>.PayableLocaleRule.ONLY_ALLOWED_KOR) // 국내 CARD를 허용합니다.
+                    .WithPayableRuleWithCard(PayableLocaleRule.ONLY_ALLOWED_KOR) // 국내 CARD를 허용합니다.
+                    .WithRestrictionPaymentType(PaymentType.BANK, PaymentType.CARD, PaymentType.MOBILE)
+               .And()
+               .Checkout()
+                    .WithProductPrice(10000)
+                    .WithSubmallName("에이블s, 포토아이")
+                    .WithPrivacyPolicyRequirements("USIM")
+                    .EnableMainShippingAddressSetting()
+                    .WithProductDeliveryInfo(
+                        new ProductDeliveryInfo()
+                        .SetDeliveryType(DeliveryType.FREE)
+                        .SetDeliveryName("checkout.productDeliveryInfo.deliveryName")
+                        .SetDefaultDeliveryCostApplied(false)
+                        .SetAdditionalDeliveryCostApplied(false)
+                        .SetShippingAddressDisplay(true)
+                    )
+                    .WithOffers(
+                        new Offer()
+                        .SetId("OFFER01")
+                        .SetUserActionCode("OFFERACTIONCODE")
+                        .SetType(OfferType.DELIVERY_COUPON)
+                        .SetName("쿠폰")
+                        .SetAmountOff(5000)
+                        .SetUserSelectable(true)
+                        .SetOrderApplied(0)
+                        .SetApplicableForNotMatchedUser(true)
+                        .SetExclusiveGroupId("내맘대로할인_01")
+                        .SetExclusiveGroupName("내맘대로할인")
+                        .SetAccepted(
+                            new Accept()
+                            .SetType(AcceptType.CARD)
+                            .AddCondition("011", 5000)
+                        )
+                    )
+                    .WithLoyalties(
+                        new Loyalty()
+                        .SetIdBy(LoyaltyId.OK_CASHBAG)
+                        .SetUserActionCode("LOYALTYACTIONCODE")
+                        .SetName("OK캐쉬백")
+                        .SetSubscriberId("0000001")
+                        .SetBalance(5000)
+                        .SetMaxApplicableAmt(10000)
+                        .SetInitialAppliedAmt(1000)
+                        .SetOrderApplied(1)
+                        .SetApplicableForNotMatchedUser(true)
+                        .SetExclusiveGroupId("내맘대로할인_02")
+                        .SetExclusiveGroupName("내맘대로할인")
+                        .SetAdditionalDiscount(
+                            new AdditionalDiscount()
+                            .SetPercentOff(0.1)
+                            .SetMaxApplicableAmt(5000)
+                        )
+                        .SetError(
+                            new Error()
+                            .SetType(ErrorType.MAINTENACE)
+                            .SetDescription("에러발생")
+                        )
+                    )
+                    .WithShippingAddresses(
+                        new ShippingAddress()
+                        .SetId("기본배송지_01")
+                        .SetName("기본배송지")
+                        .SetUserActionCode("SHIPPINGADDRESSACTIONCODE")
+                        .SetCountryCode("kr")
+                        .SetZipCode("01234")
+                        .SetState("구")
+                        .SetCity("서울")
+                        .SetMainAddress("1동 111-22")
+                        .SetDetailAddress("101호")
+                        .SetRecipientName("홍길동")
+                        .SetRecipientPhoneNumber("01011112222")
+                        .SetDeliveryRestriction(DeliveryRestriction.NOT_FAR_AWAY)
+                        .SetDefaultDeliveryCost(2500)
+                        .SetAdditionalDeliveryCost(0)
+                        .SetOrderApplied(2)
+                    )
+                    .WithMonthlyInstallment(
+                        new MonthlyInstallment()
+                        .SetCardCode("08:09")
+                        .AddCondition(0, true, 10000, true, "NN1;NN2;YY3;YY4;YY5;NH6")
+                    )
+                    .WithBankInfoList(
+                        new Bank().SetBankCode("002", "011")
+                    )
                .And()
                .Subscription()  //Optional 입니다. 자동결제 등록시에만 사용합니다.
                     .WithAutoPaymentId("subscription.autoPaymentId")  // Optional 입니다. 자동결제 등록 ID 입니다. 
-                    .WithMatchedUser(PayConfigurer<SyrupPayTokenBuilder>.MatchedUser.CI_MATCHED_ONLY)  // Optional 입니다.자동결제 제약 조건입니다. 
+                    .WithMatchedUser(MatchedUser.CI_MATCHED_ONLY)  // Optional 입니다.자동결제 제약 조건입니다. 
+                    .WithPlanInterval(SubscriptionInterval.ONDEMAND)
+                    .WithPlanName("SKT_IOT_HOME")
                 .And()
                .GenerateTokenBy(encKey);
         }

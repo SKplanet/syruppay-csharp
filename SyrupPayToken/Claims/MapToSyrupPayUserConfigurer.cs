@@ -9,18 +9,11 @@ namespace SyrupPayToken.Claims
     public class MapToSyrupPayUserConfigurer<H> : AbstractTokenConfigurer<MapToSyrupPayUserConfigurer<H>, H> where H : ITokenBuilder<H>
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        private MappingType mappingType = MappingType.NONE;
+        private MappingType mappingType = MappingType.UNDEFINED;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mappingValue;
-
-        public MappingType GetMappingType()
-        {
-            return mappingType;
-        }
-
-        public string GetMappingValue()
-        {
-            return mappingValue;
-        }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private string identityAuthenticationId;
 
         public MapToSyrupPayUserConfigurer<H> WithType(MappingType type)
         {
@@ -34,6 +27,12 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public MapToSyrupPayUserConfigurer<H> WithIdentityAuthenticationId(string identityAuthenticationId)
+        {
+            this.identityAuthenticationId = identityAuthenticationId;
+            return this;
+        }
+
         public override string ClaimName()
         {
             return "userInfoMapper";
@@ -41,15 +40,10 @@ namespace SyrupPayToken.Claims
 
         public override void ValidRequired()
         {
-            if (mappingType == MappingType.NONE || String.IsNullOrEmpty(mappingValue))
+            if (mappingType == MappingType.UNDEFINED || String.IsNullOrEmpty(mappingValue))
             {
                 throw new IllegalArgumentException("fields to map couldn't be null. type : " + this.mappingType + "value : " + this.mappingValue);
             }
-        }
-
-        public enum MappingType
-        {
-            NONE, CI_HASH, CI_MAPPED_KEY
         }
     }
 }
