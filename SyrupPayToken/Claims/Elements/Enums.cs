@@ -34,6 +34,11 @@ namespace SyrupPayToken
         UNDEFINED, CARD, BANK, MOBILE, SYRUP_PAY_COUPON
     }
 
+    public enum PaymentType
+    {
+        UNDEFINED, CARD, BANK, MOBILE
+    }
+
     public enum CashReceiptDisplay
     {
         YES, NO, DELEGATE_ADMIN

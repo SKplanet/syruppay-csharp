@@ -197,6 +197,26 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public PayConfigurer<H> WithRestrictionPaymentType(params PaymentType[] paymentTypes)
+        {
+            if (paymentTypes != null)
+            {
+                string paymentType = null;
+                foreach (PaymentType p in paymentTypes)
+                {
+                    if (paymentType != null)
+                    {
+                        paymentType += ";";
+                    }
+                    paymentType += Enum.GetName(typeof(PaymentType), p);
+                }
+
+                WithRestrictionPaymentType(paymentType);
+            }
+
+            return this;
+        }
+
         public PayConfigurer<H> WithRestrictionPaymentType(string paymentType)
         {
             GetOrNewPaymentRestrictions.PaymentType = paymentType;
