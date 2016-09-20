@@ -50,7 +50,7 @@ namespace SyrupPayToken.Claims
 
         public SubscriptionConfigurer<H> WithPlanInterval(SubscriptionInterval i)
         {
-            WithPlanName(EnumString<SubscriptionInterval>.GetValue(i));
+            GetOrNewPlan.Interval = EnumString<SubscriptionInterval>.GetValue(i);
             return this;
         }
 
