@@ -42,6 +42,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SyrupPayJose, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1f96dde2b7879ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net45\SyrupPayJose.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -96,12 +100,6 @@
     </None>
     <None Include="README.md" />
     <None Include="SyrupPayToken.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SyrupPayJose\SyrupPayJose.Net45.csproj">
-      <Project>{85dfc960-8e01-4b97-812c-5a4f2511e4bf}</Project>
-      <Name>SyrupPayJose</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
