@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SyrupPayToken.Claims;
 using Newtonsoft.Json;
 using SyrupPayToken.Utils;
@@ -161,10 +159,10 @@ namespace SyrupPayToken.jwt
         public void SetTransactionInfo(PayConfigurer<H> transactionInfo)
         {
             if (!Object.ReferenceEquals(null, this.transactionInfo) && 
-                String.IsNullOrEmpty(this.transactionInfo.GetMctTransAuthId()) && 
-                String.IsNullOrEmpty(transactionInfo.GetPaymentInfo().ProductTitle))
+                String.IsNullOrEmpty(this.transactionInfo.MctTransAuthId) && 
+                String.IsNullOrEmpty(transactionInfo.PaymentInfo.ProductTitle))
             {
-                transactionInfo.WithOrderIdOfMerchant(transactionInfo.GetMctTransAuthId());
+                transactionInfo.WithOrderIdOfMerchant(transactionInfo.MctTransAuthId);
             }
             else
             {
@@ -183,25 +181,25 @@ namespace SyrupPayToken.jwt
         }
 
         [Obsolete("set paymentInfo element by deprecated method", false)]
-        public void setPaymentInfo(PayConfigurer<H>.PaymentInformationBySeller paymentInfo)
+        public void setPaymentInfo(PaymentInformationBySeller paymentInfo)
         {
-            GetTransactionInfo().WithAmount(paymentInfo.GetPaymentAmt());
-            GetTransactionInfo().WithLanguageForDisplay((PayConfigurer<H>.Language) Enum.Parse(typeof(PayConfigurer<H>.Language), paymentInfo.GetLang().ToUpper()));
-            GetTransactionInfo().WithShippingAddress(paymentInfo.GetShippingAddress());
-            GetTransactionInfo().WithProductTitle(paymentInfo.GetProductTitle());
-            GetTransactionInfo().WithProductUrls(paymentInfo.GetProductUrls());
-            GetTransactionInfo().WithCurrency((PayConfigurer<H>.Currency)Enum.Parse(typeof(PayConfigurer<H>.Language), paymentInfo.GetCurrencyCode().ToUpper()));
-            GetTransactionInfo().WithDeliveryName(paymentInfo.GetDeliveryName());
-            GetTransactionInfo().WithDeliveryPhoneNumber(paymentInfo.GetDeliveryPhoneNumber());
-            GetTransactionInfo().WithInstallmentPerCardInformation(paymentInfo.GetCardInfoList());
+            GetTransactionInfo().WithAmount(paymentInfo.PaymentAmt);
+            GetTransactionInfo().WithLanguageForDisplay((Language) Enum.Parse(typeof(Language), paymentInfo.Lang.ToUpper()));
+            GetTransactionInfo().WithShippingAddress(paymentInfo.ShippingAddress);
+            GetTransactionInfo().WithProductTitle(paymentInfo.ProductTitle);
+            GetTransactionInfo().WithProductUrls(paymentInfo.ProductUrls);
+            GetTransactionInfo().WithCurrency((Currency)Enum.Parse(typeof(Language), paymentInfo.CurrencyCode.ToUpper()));
+            GetTransactionInfo().WithDeliveryName(paymentInfo.DeliveryName);
+            GetTransactionInfo().WithDeliveryPhoneNumber(paymentInfo.DeliveryPhoneNumber);
+            GetTransactionInfo().WithInstallmentPerCardInformation(paymentInfo.CardInfoList);
         }
 
         [Obsolete("set paymentRestrictions element by deprecated method", false)]
-        public void setPaymentRestrictions(PayConfigurer<H>.PaymentRestriction paymentRestriction)
+        public void setPaymentRestrictions(PaymentRestriction paymentRestriction)
         {
-            foreach (PayConfigurer<H>.PayableLocaleRule r in Enum.GetValues(typeof(PayConfigurer<H>.PayableLocaleRule)))
+            foreach (PayableLocaleRule r in Enum.GetValues(typeof(PayableLocaleRule)))
             {
-                if (String.Equals(EnumString<PayConfigurer<H>.PayableLocaleRule>.GetValue(r), paymentRestriction.CardIssuerRegion))
+                if (String.Equals(EnumString<PayableLocaleRule>.GetValue(r), paymentRestriction.CardIssuerRegion))
                 {
                     GetTransactionInfo().WithPayableRuleWithCard(r);
                 }

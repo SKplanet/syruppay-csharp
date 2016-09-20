@@ -5,7 +5,7 @@ using System;
 
 namespace SyrupPayToken.Claims
 {
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.Fields)]
     public class MapToSyrupPayUserConfigurer<H> : AbstractTokenConfigurer<MapToSyrupPayUserConfigurer<H>, H> where H : ITokenBuilder<H>
     {
         [JsonConverter(typeof(StringEnumConverter))]
@@ -14,21 +14,6 @@ namespace SyrupPayToken.Claims
         private string mappingValue;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string identityAuthenticationId;
-
-        public MappingType GetMappingType()
-        {
-            return mappingType;
-        }
-
-        public string GetMappingValue()
-        {
-            return mappingValue;
-        }
-
-        public string GetIdentityAuthenticationId()
-        {
-            return identityAuthenticationId;
-        }
 
         public MapToSyrupPayUserConfigurer<H> WithType(MappingType type)
         {
@@ -60,10 +45,5 @@ namespace SyrupPayToken.Claims
                 throw new IllegalArgumentException("fields to map couldn't be null. type : " + this.mappingType + "value : " + this.mappingValue);
             }
         }
-    }
-
-    public enum MappingType
-    {
-        UNDEFINED, CI_HASH, CI_MAPPED_KEY
     }
 }

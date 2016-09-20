@@ -4,104 +4,55 @@ using SyrupPayToken.exception;
 using SyrupPayToken.Utils;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace SyrupPayToken.Claims
 {
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.Fields)]
     public sealed class PayConfigurer<H> : AbstractTokenConfigurer<PayConfigurer<H>, H> where H : ITokenBuilder<H>
     {
-        private static List<string> ISO_LANGUAGES;
-        private static List<string> ISO_COUNTRIES;
-
-        [JsonProperty]
         private string mctTransAuthId;
         [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private CashReceiptDisplay cashReceiptDisplay;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mctDefinedValue;
-        [JsonProperty]
-        private PaymentInformationBySeller paymentInfo = new PaymentInformationBySeller();
-        [JsonProperty]
-        private PaymentRestriction paymentRestrictions = new PaymentRestriction();
+        private PaymentInformationBySeller paymentInfo;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private PaymentRestriction paymentRestrictions;
 
-        public PayConfigurer()
+        public string MctTransAuthId
         {
-            if (Object.ReferenceEquals(null, ISO_LANGUAGES) || ISO_LANGUAGES.Count == 0)
-                LoadLanguageByIso639();
-            if (Object.ReferenceEquals(null, ISO_COUNTRIES) || ISO_COUNTRIES.Count == 0)
-                LoadCountriesByIso3166();
+            get { return mctTransAuthId; }
         }
 
-        private void LoadLanguageByIso639()
+        public PaymentInformationBySeller PaymentInfo
         {
-            ISO_LANGUAGES = new List<string>();
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            foreach (var culture in cultures)
+            get { return paymentInfo; }
+        }
+
+        private PaymentInformationBySeller GetOrNewPaymentInfo
+        {
+            get
             {
-                ISO_LANGUAGES.Add(culture.TwoLetterISOLanguageName);
+                if (paymentInfo == null)
+                    paymentInfo = new PaymentInformationBySeller();
+                return paymentInfo;
             }
         }
 
-        public static void LoadCountriesByIso3166()
+        private PaymentRestriction GetOrNewPaymentRestrictions
         {
-            ISO_COUNTRIES = new List<String>();
-            foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            get
             {
-                RegionInfo country = new RegionInfo(culture.LCID);
-                if (!ISO_COUNTRIES.Contains(country.TwoLetterISORegionName))
-                {
-                    ISO_COUNTRIES.Add(country.TwoLetterISORegionName);
-                }
+                if (paymentRestrictions == null)
+                    paymentRestrictions = new PaymentRestriction();
+                return paymentRestrictions;
             }
-        }
-
-        public static bool IsValidCountryAlpha2Code(string code)
-        {
-            return ISO_COUNTRIES.Contains(code.Contains(":") ? code.Substring(code.IndexOf(":") + 1).ToUpper() : code.ToUpper());
-        }
-
-        public static bool IsValidLanuageCode(string code)
-        {
-            return ISO_LANGUAGES.Contains(code);
-        }
-
-        public string GetMctTransAuthId()
-        {
-            return mctTransAuthId;
-        }
-
-        public string GetMerchanttDefinedValue()
-        {
-            return mctDefinedValue;
-        }
-
-        public CashReceiptDisplay GetCashReceiptDisplay()
-        {
-            return cashReceiptDisplay;
-        }
-
-        public PaymentInformationBySeller GetPaymentInfo()
-        {
-            return paymentInfo;
-        }
-
-        public PaymentRestriction GetPaymentRestrictions()
-        {
-            return paymentRestrictions;
         }
 
         public PayConfigurer<H> WithOrderIdOfMerchant(string orderId)
         {
             mctTransAuthId = orderId;
-            return this;
-        }
-
-        public PayConfigurer<H> WithMerchantDefinedValue(string merchantDefinedValue)
-        {
-            this.mctDefinedValue = merchantDefinedValue;
             return this;
         }
 
@@ -111,9 +62,15 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public PayConfigurer<H> WithMerchantDefinedValue(string merchantDefinedValue)
+        {
+            this.mctDefinedValue = merchantDefinedValue;
+            return this;
+        }
+
         public PayConfigurer<H> WithProductTitle(string productTitle)
         {
-            paymentInfo.ProductTitle = productTitle;
+            GetOrNewPaymentInfo.ProductTitle = productTitle;
             return this;
         }
 
@@ -126,7 +83,7 @@ namespace SyrupPayToken.Claims
                     throw new IllegalArgumentException("product details should be contained http or https urls. check your input!");
                 }
             }
-            paymentInfo.AddProductUrls = productUrls;
+            GetOrNewPaymentInfo.AddProductUrls = productUrls;
             return this;
         }
 
@@ -137,117 +94,114 @@ namespace SyrupPayToken.Claims
 
         public PayConfigurer<H> WithLanguageForDisplay(Language l)
         {
-            paymentInfo.Lang = l.ToString();
+            GetOrNewPaymentInfo.Lang = l.ToString();
             return this;
         }
 
         public PayConfigurer<H> WithCurrency(Currency c)
         {
-            paymentInfo.CurrencyCode = c.ToString();
-            return this;
-        }
-
-        public PayConfigurer<H> WithShippingAddress(ShippingAddress shippingAddress)
-        {
-            paymentInfo.ShippingAddress = shippingAddress.MapToStringForFds;
-            return this;
-        }
-
-        public PayConfigurer<H> WithShippingAddress(string shippingAddress)
-        {
-            paymentInfo.ShippingAddress = shippingAddress;
+            GetOrNewPaymentInfo.CurrencyCode = c.ToString();
             return this;
         }
 
         public PayConfigurer<H> WithAmount(int paymentAmount)
         {
-            if (paymentAmount <= 0)
-            {
-                throw new IllegalArgumentException("Cannot be smaller than 0. Check yours input value : " + paymentAmount);
-            }
-            paymentInfo.PaymentAmt = paymentAmount;
+            GetOrNewPaymentInfo.PaymentAmt = paymentAmount;
             return this;
         }
 
+        public PayConfigurer<H> WithShippingAddress(ShippingAddress shippingAddress)
+        {
+            GetOrNewPaymentInfo.ShippingAddress = shippingAddress.MapToStringForFds;
+            return this;
+        }
+
+        public PayConfigurer<H> WithShippingAddress(string shippingAddress)
+        {
+            GetOrNewPaymentInfo.ShippingAddress = shippingAddress;
+            return this;
+        }
+       
         public PayConfigurer<H> WithDeliveryPhoneNumber(string deliveryPhoneNumber)
         {
-            paymentInfo.DeliveryPhoneNumber = deliveryPhoneNumber;
+            GetOrNewPaymentInfo.DeliveryPhoneNumber = deliveryPhoneNumber;
             return this;
         }
 
-        public PayConfigurer<H> WithDeliveryName(String deliveryName)
+        public PayConfigurer<H> WithDeliveryName(string deliveryName)
         {
-            paymentInfo.DeliveryName = deliveryName;
+            GetOrNewPaymentInfo.DeliveryName = deliveryName;
             return this;
         }
 
         public PayConfigurer<H> WithDeliveryType(DeliveryType deliveryType)
         {
-            paymentInfo.DeliveryType = deliveryType;
+            GetOrNewPaymentInfo.DeliveryType = deliveryType;
             return this;
         }
 
-        public PayConfigurer<H> WithBeAbleToExchangeToCash(bool exchangeable)
-        {
-            paymentInfo.Exchangeable = exchangeable;
-            return this;
-        }
-
+        
         public PayConfigurer<H> WithInstallmentPerCardInformation(List<CardInstallmentInformation> cards)
         {
-            paymentInfo.AddCardInfoList = cards;
+            GetOrNewPaymentInfo.AddCardInfoList = cards;
             return this;
         }
 
         public PayConfigurer<H> WithInstallmentPerCardInformation(params CardInstallmentInformation[] card)
         {
-            paymentInfo.AddCardInfoList = new List<CardInstallmentInformation>(card);
+            GetOrNewPaymentInfo.AddCardInfoList = new List<CardInstallmentInformation>(card);
             return this;
         }
 
 
         public PayConfigurer<H> WithBankInfoList(List<Bank> bankInfoList)
         {
-            paymentInfo.AddBankInfoList = bankInfoList;
+            GetOrNewPaymentInfo.AddBankInfoList = bankInfoList;
             return this;
         }
 
         public PayConfigurer<H> WithBankInfoList(params Bank[] bankInfoList)
         {
-            paymentInfo.AddBankInfoList = new List<Bank>(bankInfoList);
+            WithBankInfoList(new List<Bank>(bankInfoList));
+            return this;
+        }
+
+
+        public PayConfigurer<H> WithBeAbleToExchangeToCash(bool exchangeable)
+        {
+            GetOrNewPaymentInfo.Exchangeable = exchangeable;
             return this;
         }
 
         public PayConfigurer<H> WithPayableRuleWithCard(PayableLocaleRule r)
         {
-            paymentRestrictions.CardIssuerRegion = EnumString<PayableLocaleRule>.GetValue(r);
+            WithPayableRuleWithCard(EnumString<PayableLocaleRule>.GetValue(r));
             return this;
         }
 
         public PayConfigurer<H> WithPayableRuleWithCard(string cardIssuerRegion)
         {
-            paymentRestrictions.CardIssuerRegion = cardIssuerRegion;
+            GetOrNewPaymentRestrictions.CardIssuerRegion = cardIssuerRegion;
             return this;
         }
 
         public PayConfigurer<H> WithMatchedUser(MatchedUser m)
         {
-            paymentRestrictions.MatchedUser = EnumString<MatchedUser>.GetValue(m);
+            WithMatchedUser(EnumString<MatchedUser>.GetValue(m));
             return this;
         }
 
         public PayConfigurer<H> WithMatchedUser(string matchedUser)
         {
-            paymentRestrictions.MatchedUser = matchedUser;
+            GetOrNewPaymentRestrictions.MatchedUser = matchedUser;
             return this;
         }
 
         public PayConfigurer<H> WithRestrictionPaymentType(string paymentType)
         {
-            paymentRestrictions.PaymentType = paymentType;
+            GetOrNewPaymentRestrictions.PaymentType = paymentType;
             return this;
         }
-
 
         public override string ClaimName()
         {
@@ -275,533 +229,6 @@ namespace SyrupPayToken.Claims
 
             if (!String.IsNullOrEmpty(this.mctTransAuthId) && mctTransAuthId.Length > 1024)
                 throw new IllegalArgumentException("merchant define value's length couldn't be bigger than 1024. but yours is " + mctDefinedValue.Length);
-        }
-
-        public enum CashReceiptDisplay
-        {
-            YES, NO, DELEGATE_ADMIN
-        }
-
-        public enum Language
-        {
-            KO, EN
-        }
-
-        public enum Currency
-        {
-            KRW, USD
-        }
-
-        public enum PayableLocaleRule
-        {
-            [Description("ALLOWED:KOR")]
-            ONLY_ALLOWED_KOR,
-            [Description("NOT_ALLOWED:KOR")]
-            ONLY_NOT_ALLOED_KOR,
-            [Description("ALLOWED:USA")]
-            ONLY_ALLOWED_USA,
-            [Description("NOT_ALLOWED:USA")]
-            ONLY_NOT_ALLOED_USA
-        }
-
-        public enum DeliveryRestriction
-        {
-            NOT_FAR_AWAY, FAR_AWAY, FAR_FAR_AWAY
-        }
-
-        [JsonObject(MemberSerialization.OptIn)]
-        public sealed class ShippingAddress
-        {
-            private string id;
-            private string userActionCode;
-            private string name;
-            private string countryCode;
-            private string zipCode;
-            private string mainAddress;
-            private string detailAddress;
-            private string city;
-            private string state;
-            private string recipientName;
-            private string recipientPhoneNumber;
-            [JsonConverter(typeof(StringEnumConverter))]
-            private DeliveryRestriction deliveryRestriction;
-            private int defaultDeliveryCost;
-            private int additionalDeliveryCost;
-            private int orderApplied;
-            private string fullAddressFormat;
-
-            public ShippingAddress(string zipCode, string mainAddress, string detailAddress, string city, string state, string countryCode)
-            {
-                this.zipCode = zipCode;
-                this.mainAddress = mainAddress;
-                this.detailAddress = detailAddress;
-                this.city = city;
-                this.state = state;
-                this.countryCode = SetCountryCode(countryCode).GetCountryCode();
-            }
-
-            public string GetUserActionCode()
-            {
-                return userActionCode;
-            }
-
-            public ShippingAddress SetUserActionCode(string userActionCode)
-            {
-                this.userActionCode = userActionCode;
-                return this;
-            }
-
-            public string GetId()
-            {
-                return id;
-            }
-
-            public ShippingAddress SetId(string id)
-            {
-                this.id = id;
-                return this;
-            }
-
-            public string GetName()
-            {
-                return name;
-            }
-
-            public ShippingAddress SetName(string name)
-            {
-                this.name = name;
-                return this;
-            }
-
-            public string GetCountryCode()
-            {
-                return countryCode;
-            }
-
-            public ShippingAddress SetCountryCode(string countryCode)
-            {
-                if (!IsValidCountryAlpha2Code(countryCode))
-                {
-                    throw new IllegalArgumentException("countryCode should meet the specifications of ISO-3166 Alpha2(as KR, US) except prefix like a2. yours : " + countryCode);
-                }
-                this.countryCode = countryCode.ToLower();
-                return this;
-            }
-
-            public string GetZipCode()
-            {
-                return zipCode;
-            }
-
-            public ShippingAddress SetZipCode(string zipCode)
-            {
-                this.zipCode = zipCode;
-                return this;
-            }
-
-            public string GetMainAddress()
-            {
-                return mainAddress;
-            }
-
-            public ShippingAddress SetMainAddress(string mainAddress)
-            {
-                this.mainAddress = mainAddress;
-                return this;
-            }
-
-            public string GetDetailAddress()
-            {
-                return detailAddress;
-            }
-
-            public ShippingAddress SetDetailAddress(string detailAddress)
-            {
-                this.detailAddress = detailAddress;
-                return this;
-            }
-
-            public string GetCity()
-            {
-                return city;
-            }
-
-            public ShippingAddress SetCity(string city)
-            {
-                this.city = city;
-                return this;
-            }
-
-            public string GetState()
-            {
-                return state;
-            }
-
-            public ShippingAddress SetState(string state)
-            {
-                this.state = state;
-                return this;
-            }
-
-            public string GetRecipientName()
-            {
-                return recipientName;
-            }
-
-            public ShippingAddress SetRecipientName(string recipientName)
-            {
-                this.recipientName = recipientName;
-                return this;
-            }
-
-            public string GetRecipientPhoneNumber()
-            {
-                return recipientPhoneNumber;
-            }
-
-            public ShippingAddress SetRecipientPhoneNumber(string recipientPhoneNumber)
-            {
-                Regex regex = new Regex("^\\d+$");
-                if (String.IsNullOrEmpty(recipientPhoneNumber) && !regex.Match(recipientPhoneNumber).Success)
-                {
-                    throw new IllegalArgumentException("phone number should be contained numbers. remove characters as '-'. yours : " + recipientPhoneNumber);
-                }
-                this.recipientPhoneNumber = recipientPhoneNumber;
-                return this;
-            }
-
-            public DeliveryRestriction GetDeliveryRestriction()
-            {
-                return deliveryRestriction;
-            }
-
-            public ShippingAddress SetDeliveryRestriction(DeliveryRestriction deliveryRestriction)
-            {
-                this.deliveryRestriction = deliveryRestriction;
-                return this;
-            }
-
-            public int GetDefaultDeliveryCost()
-            {
-                return defaultDeliveryCost;
-            }
-
-            public ShippingAddress SetDefaultDeliveryCost(int defaultDeliveryCost)
-            {
-                this.defaultDeliveryCost = defaultDeliveryCost;
-                return this;
-            }
-
-            public int GetAdditionalDeliveryCost()
-            {
-                return additionalDeliveryCost;
-            }
-
-            public ShippingAddress SetAdditionalDeliveryCost(int additionalDeliveryCost)
-            {
-                this.additionalDeliveryCost = additionalDeliveryCost;
-                return this;
-            }
-
-            public int GetOrderApplied()
-            {
-                return orderApplied;
-            }
-
-            public ShippingAddress SetOrderApplied(int orderApplied)
-            {
-                this.orderApplied = orderApplied;
-                return this;
-            }
-
-            public string MapToStringForFds
-            {
-                set { fullAddressFormat = value; }
-                get { return GetMapToStringForFds(); }
-            }
-            public string GetMapToStringForFds()
-            {
-                fullAddressFormat = String.Format("{0}|{1}|{2}|{3}|{4}|{5}|", countryCode, zipCode, mainAddress, detailAddress, city, state);
-                return fullAddressFormat;
-            }
-
-            public void ValidRequiredToCheckout()
-            {
-                if (String.IsNullOrEmpty(id) ||
-                    String.IsNullOrEmpty(name) ||
-                    String.IsNullOrEmpty(countryCode) ||
-                    String.IsNullOrEmpty(zipCode) ||
-                    String.IsNullOrEmpty(mainAddress) ||
-                    String.IsNullOrEmpty(detailAddress) ||
-                    String.IsNullOrEmpty(recipientName) ||
-                    String.IsNullOrEmpty(recipientPhoneNumber))
-                {
-                    throw new IllegalArgumentException("ShippingAddress object to checkout couldn't be with null fields. id : " + id + ", name : " + name + ", countryCode : " + countryCode + ", zipCode : " + zipCode + ", mainAddress : " + mainAddress + ", detailAddress : " + detailAddress + ", recipientName : " + recipientName + ", recipientPhoneNumber : " + recipientPhoneNumber);
-                }
-
-                if (!IsValidCountryAlpha2Code(countryCode))
-                {
-                    throw new IllegalArgumentException("countryCode should meet the specifications of ISO-3166 Alpha2(as KR, US) except prefix like a2. yours : " + countryCode);
-                }
-
-                if (defaultDeliveryCost <= 0)
-                {
-                    throw new IllegalArgumentException("defaultDeliveryCost field should be bigger than 0. yours : " + defaultDeliveryCost);
-                }
-            }
-        }
-
-        [JsonObject(MemberSerialization.OptIn)]
-        public sealed class CardInstallmentInformation
-        {
-            [JsonProperty]
-            private string cardCode;
-            [JsonProperty]
-            private string monthlyInstallmentInfo;
-
-            public CardInstallmentInformation(string cardCode, string monthlyInstallmentInfo)
-            {
-                this.cardCode = cardCode;
-                this.monthlyInstallmentInfo = monthlyInstallmentInfo;
-            }
-
-            public string CardCode { get { return cardCode; } }
-            public string GetCardCode()
-            {
-                return cardCode;
-            }
-
-            public string MonthlyInstallmentInfo { get { return monthlyInstallmentInfo; } }
-            public string GetMonthlyInstallmentInfo()
-            {
-                return monthlyInstallmentInfo;
-            }
-        }
-
-        [JsonObject(MemberSerialization.OptIn)]
-        public sealed class PaymentInformationBySeller
-        {
-            [JsonProperty]
-            private List<CardInstallmentInformation> cardInfoList = new List<CardInstallmentInformation>();
-            [JsonProperty]
-            private string productTitle;
-            [JsonProperty]
-            private List<string> productUrls = new List<string>();
-            [JsonProperty]
-            private string lang = "KO";
-            [JsonProperty]
-            private string currencyCode = "KRW";
-            [JsonProperty]
-            private int paymentAmt;
-            [JsonProperty]
-            private string shippingAddress;
-            [JsonProperty]
-            private string deliveryPhoneNumber;
-            [JsonProperty]
-            private string deliveryName;
-            [JsonProperty]
-            [JsonConverter(typeof(StringEnumConverter))]
-            private DeliveryType deliveryType;
-            [JsonProperty("isExchangeable")]
-            private bool isExchangeable;
-            [JsonProperty]
-            private List<Bank> bankInfoList = new List<Bank>();
-
-            public string ProductTitle
-            {
-                get { return productTitle; }
-                set { productTitle = value; }
-            }
-            public string GetProductTitle()
-            {
-                return productTitle;
-            }
-
-            public List<string> AddProductUrls
-            {
-                set { productUrls.AddRange(value); }
-            }
-            public List<string> ProductUrls
-            {
-                get { return productUrls; }
-            }
-            public List<string> GetProductUrls()
-            {
-                return productUrls;
-            }
-
-            public string Lang
-            {
-                get { return lang; }
-                set { lang = value; }
-            }
-            public string GetLang()
-            {
-                return lang;
-            }
-
-            public string CurrencyCode
-            {
-                get { return currencyCode; }
-                set { currencyCode = value; }
-            }
-            public string GetCurrencyCode()
-            {
-                return currencyCode;
-            }
-
-            public int PaymentAmt
-            {
-                get { return paymentAmt; }
-                set { paymentAmt = value; }
-            }
-            public int GetPaymentAmt()
-            {
-                return paymentAmt;
-            }
-
-            public string ShippingAddress
-            {
-                get { return shippingAddress; }
-                set { shippingAddress = value;}
-            }
-            public string GetShippingAddress()
-            {
-                return shippingAddress;
-            }
-
-            public string DeliveryPhoneNumber
-            {
-                get { return deliveryPhoneNumber; }
-                set { deliveryPhoneNumber = value; }
-            }
-            public string GetDeliveryPhoneNumber()
-            {
-                return deliveryPhoneNumber;
-            }
-
-            public string DeliveryName
-            {
-                get { return deliveryName; }
-                set { deliveryName = value; }
-            }
-            public string GetDeliveryName()
-            {
-                return deliveryName;
-            }
-
-            public DeliveryType DeliveryType
-            {
-                get { return deliveryType; }
-                set { deliveryType = value; }
-            }
-
-            public bool Exchangeable
-            {
-                get { return isExchangeable; }
-                set { isExchangeable = value; }
-            }
-            public bool IsExchangeable()
-            {
-                return isExchangeable;
-            }
-
-            public List<CardInstallmentInformation> AddCardInfoList { set { cardInfoList.AddRange(value); } }
-            public List<CardInstallmentInformation> CardInfoList
-            {
-                get { return cardInfoList; }
-            }
-            public List<CardInstallmentInformation> GetCardInfoList()
-            {
-                return cardInfoList;
-            }
-
-            public List<Bank> AddBankInfoList { set { bankInfoList.AddRange(value); } }
-            public List<Bank> BankInfoList
-            {
-                get { return bankInfoList; }
-                set { bankInfoList = value; }
-            }
-
-            [Obsolete]
-            public void SetProductDetails(List<string> productDetails)
-            {
-                this.productUrls = productDetails;
-            }
-        }
-
-        [JsonObject(MemberSerialization.OptIn)]
-        public sealed class PaymentRestriction
-        {
-            [JsonProperty]
-            private string cardIssuerRegion = "ALLOWED:KOR";
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            private string matchedUser;
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            private string paymentType;
-
-            public string CardIssuerRegion
-            {
-                get { return cardIssuerRegion; }
-                set { cardIssuerRegion = value; }
-            }
-
-            public string MatchedUser
-            {
-                get { return matchedUser; }
-                set { matchedUser = value; }
-            }
-
-            public string PaymentType
-            {
-                get { return paymentType; }
-                set { paymentType = value; }
-            }
-
-            public void SetCardIssuerRegion(string cardIssuerRegion)
-            {
-                this.cardIssuerRegion = cardIssuerRegion;
-            }
-
-            public string GetCardIssueRegion()
-            {
-                return cardIssuerRegion;
-            }
-        }
-
-        public enum MatchedUser
-        {
-            [Description("CI_MATCHED_ONLY")]
-            CI_MATCHED_ONLY
-        }
-    }
-
-    public enum DeliveryType
-    {
-        UNDEFINED, PREPAID, FREE, DIY, QUICK, PAYMENT_ON_DELIVERY
-    }
-
-    public sealed class Bank
-    {
-        private string bankCode;
-
-        public string BankCode
-        {
-            get { return bankCode; }
-            set { bankCode = value; }
-        }
-
-        public Bank SetBankCode(params string[] bankCodes)
-        {
-            foreach (string bankCode in bankCodes)
-            {
-                if (this.bankCode == null)
-                    this.bankCode = bankCode;
-                else
-                    this.bankCode += ":" + bankCode;
-            }
-
-            return this;
         }
     }
 }
