@@ -66,8 +66,10 @@
     <Compile Include="Claims\Elements\Loyalty.cs" />
     <Compile Include="Claims\Elements\MonthlyInstallment.cs" />
     <Compile Include="Claims\Elements\Offer.cs" />
+    <Compile Include="Claims\Elements\PayableCard.cs" />
     <Compile Include="Claims\Elements\PaymentInformationBySeller.cs" />
     <Compile Include="Claims\Elements\PaymentRestriction.cs" />
+    <Compile Include="Claims\Elements\Personal.cs" />
     <Compile Include="Claims\Elements\Plan.cs" />
     <Compile Include="Claims\Elements\ProductDeliveryInfo.cs" />
     <Compile Include="Claims\Elements\RegistrationRestrictions.cs" />

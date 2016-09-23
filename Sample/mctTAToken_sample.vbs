@@ -34,6 +34,7 @@ With objMctTAToken
 .CardIssuerRegion = "ALLOWED:kor"
 '.PaymentInfoMatchedUser = "CI_MATCHED_ONLY"    'optional
 '.AutoPaymentId = "Auto"                        'optional
+.SubscriptionPromotionCode = "12345678901234567890123456789012"
 '.AutoPaymentMatchedUser = "CI_MATCHED_ONLY"    'optional
 End With
 
@@ -41,3 +42,4 @@ WScript.Echo objMctTAToken.ToJson()
 WScript.Echo objMctTAToken.Serialzie(encKey)
 
 Set objMctTAToken = Nothing
+

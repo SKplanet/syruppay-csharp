@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using SyrupPayToken.exception;
 using SyrupPayToken.Utils;
+using System;
 
 namespace SyrupPayToken.Claims
 {
@@ -12,6 +14,8 @@ namespace SyrupPayToken.Claims
         private string autoPaymentId;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private Plan plan;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        private string promotionCode;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private RegistrationRestrictions registrationRestrictions;
 
@@ -60,6 +64,11 @@ namespace SyrupPayToken.Claims
             return this;
         }
 
+        public SubscriptionConfigurer<H> WithPromotionCode(string promotionCode)
+        {
+            this.promotionCode = promotionCode;
+            return this;
+        }
 
         public SubscriptionConfigurer<H> WithMatchedUser(MatchedUser m)
         {
@@ -74,6 +83,11 @@ namespace SyrupPayToken.Claims
 
         public override void ValidRequired()
         {
+            if (promotionCode != null && promotionCode.Length > 32)
+            {
+                throw new IllegalArgumentException(String.Format("promotionCode should be less than 32 bytes. Yours promotionCode is {0} bytes.", promotionCode.Length));
+            }
+
             if (plan != null)
                 plan.ValidRequired();
         }
