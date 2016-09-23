@@ -4,23 +4,25 @@ using SyrupPayToken.Claims;
 using System;
 using System.EnterpriseServices;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json;
 
 [assembly: ApplicationActivation(ActivationOption.Server)]
 [assembly: ApplicationAccessControl(false)]
 namespace SyrupPay
 {
+    [Guid("42AAAE43-D5F4-4634-B225-EF49105763DB")]
     public interface IJoseSeriazlier
     {
         string toJwe(string iss, string alg, string enc, string key, string payload);
         string toJws(string iss, string alg, string key, string payload);
     }
 
+    [Guid("1D3C2541-18E1-4284-8368-0C861964B4B3")]
     public interface IJoseDeserizlier
     {
         string fromJose(string key, string src);
     }
 
+    [Guid("AA78F317-5A57-444C-8599-DDB2BA671500")]
     [ClassInterface(ClassInterfaceType.None)]
     public class JoseSerializer : ServicedComponent, IJoseSeriazlier
     {
@@ -54,6 +56,7 @@ namespace SyrupPay
         }
     }
 
+    [Guid("F8AA314E-02FF-4CBA-BD61-81B90625C6E6")]
     [ClassInterface(ClassInterfaceType.None)]
     public class JoseDeserializer : ServicedComponent, IJoseDeserizlier
     {
@@ -67,6 +70,7 @@ namespace SyrupPay
         }
     }
 
+    [Guid("91A8D020-DEDD-4349-9BB9-69C6800BFF80")]
     public interface IMctTAToken
     {
         string Iss { set; }
@@ -96,12 +100,13 @@ namespace SyrupPay
         string AutoPaymentMatchedUser { set; }
         string SubscriptionInterval { set; }
         string SubscriptionServiceName { set; }
+        string SubscriptionPromotionCode { set; }
         string ToJson();
         string Serialzie(string key);
     }
 
+    [Guid("AE1EBBE6-6576-4E49-9735-59FBEBA91DD0")]
     [ClassInterface(ClassInterfaceType.None)]
-    [JsonObject(MemberSerialization.OptIn)]
     public sealed class MctTAToken : ServicedComponent, IMctTAToken
     {
         private string json;
@@ -177,8 +182,7 @@ namespace SyrupPay
         {
             set
             {
-                MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType mappingType = 
-                    (MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType) Enum.Parse(typeof(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType), value.ToUpper());
+                MappingType mappingType = (MappingType) Enum.Parse(typeof(MappingType), value.ToUpper());
                 MapToSyrupPayUserConfigure.WithType(mappingType);
             }
         }
@@ -212,9 +216,7 @@ namespace SyrupPay
         {
             set
             {
-                PayConfigurer<SyrupPayTokenBuilder>.Language lang = 
-                    (PayConfigurer<SyrupPayTokenBuilder>.Language) Enum.Parse(typeof(PayConfigurer<SyrupPayTokenBuilder>.Language), value.ToUpper());
-
+                Language lang = (Language) Enum.Parse(typeof(Language), value.ToUpper());
                 PayConfigure.WithLanguageForDisplay(lang);
             }
         }
@@ -223,9 +225,7 @@ namespace SyrupPay
         {
             set
             {
-                PayConfigurer<SyrupPayTokenBuilder>.Currency currency =
-                    (PayConfigurer<SyrupPayTokenBuilder>.Currency)Enum.Parse(typeof(PayConfigurer<SyrupPayTokenBuilder>.Currency), value.ToUpper());
-
+                Currency currency = (Currency)Enum.Parse(typeof(Currency), value.ToUpper());
                 PayConfigure.WithCurrency(currency);
             }
         }
@@ -252,7 +252,7 @@ namespace SyrupPay
 
         public void AddCardInfo(string cardCode, string monthlyInstallmentInfo)
         {
-            PayConfigure.WithInstallmentPerCardInformation(new PayConfigurer<SyrupPayTokenBuilder>.CardInstallmentInformation(cardCode, monthlyInstallmentInfo));
+            PayConfigure.WithInstallmentPerCardInformation(new CardInstallmentInformation(cardCode, monthlyInstallmentInfo));
         }
 
         public bool IsExchangeable
@@ -269,8 +269,7 @@ namespace SyrupPay
         {
             set
             {
-                PayConfigurer<SyrupPayTokenBuilder>.MatchedUser matchedUser =
-                    (PayConfigurer<SyrupPayTokenBuilder>.MatchedUser)Enum.Parse(typeof(PayConfigurer<SyrupPayTokenBuilder>.MatchedUser), value.ToUpper());
+                MatchedUser matchedUser = (MatchedUser)Enum.Parse(typeof(MatchedUser), value.ToUpper());
 
                 PayConfigure.WithMatchedUser(value);
             }
@@ -290,9 +289,8 @@ namespace SyrupPay
         {
             set
             {
-                SubscriptionConfigurer<SyrupPayTokenBuilder>.SubscriptionInterval interval =
-                  (SubscriptionConfigurer<SyrupPayTokenBuilder>.SubscriptionInterval)Enum.Parse(typeof(SubscriptionConfigurer<SyrupPayTokenBuilder>.SubscriptionInterval), value.ToUpper());
-                SubscriptionConfigure.WithInterval(interval);
+                SubscriptionInterval interval = (SubscriptionInterval)Enum.Parse(typeof(SubscriptionInterval), value.ToUpper());
+                SubscriptionConfigure.WithPlanInterval(interval);
             }
         }
 
@@ -300,7 +298,7 @@ namespace SyrupPay
         {
             set
             {
-                SubscriptionConfigure.WithServiceName(value);
+                SubscriptionConfigure.WithPlanName(value);
             }
         }
 
@@ -308,8 +306,7 @@ namespace SyrupPay
         {
             set
             {
-                PayConfigurer<SyrupPayTokenBuilder>.MatchedUser matchedUser =
-                    (PayConfigurer<SyrupPayTokenBuilder>.MatchedUser)Enum.Parse(typeof(PayConfigurer<SyrupPayTokenBuilder>.MatchedUser), value.ToUpper());
+                MatchedUser matchedUser = (MatchedUser)Enum.Parse(typeof(MatchedUser), value.ToUpper());
                 SubscriptionConfigure.WithMatchedUser(matchedUser);
             }
         }
@@ -317,6 +314,11 @@ namespace SyrupPay
         public string MctSubscriptRequestId
         {
             set { SubscriptionConfigure.WithMerchantSubscriptionId(value); }
+        }
+
+        public string SubscriptionPromotionCode
+        {
+            set { SubscriptionConfigure.WithPromotionCode(value); }
         }
 
         public string ToJson()

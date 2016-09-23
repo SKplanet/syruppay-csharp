@@ -156,9 +156,25 @@ namespace SyrupPay.Sample
                    .WithDeviceIdentifier("loginInfo.deviceIdentifier")  //Optional 입니다. 
                .And()
                .MapToSyrupPayUser()   //Optional 입니다.
-                   .WithType(MappingType.CI_HASH) // Optional 입니다.
-                                                                                                    //.WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_MAPPED_KEY) 
-                   .WithValue("userInfoMapper.mappingValue")   //Optional 압니다.
+                   .WithType(MappingType.ENCRYPTED_PERSONAL_INFO) // Optional 입니다.
+                                                                  //.WithType(MapToSyrupPayUserConfigurer<SyrupPayTokenBuilder>.MappingType.CI_MAPPED_KEY) 
+                   .WithValue(new Personal()
+                        .SetUserName("홍길동")
+                        .SetSsnFirst7Digit("7809201")
+                        .SetLineNumber("01041110194")
+                        .SetOperatorCode(OperatorCode.SKT)
+                        .SetCiHash("HHHHHHAAAAAAAAAAAASSSSSSSSSSSSSSHHHHHHHHHHH")
+                        .SetEmail("test@email.com")
+                        .SetPayableCard(new PayableCard()
+                            .SetCardNo("1111222233334444")
+                            .SetExpireDate("202001")
+                            .SetCardName("카드명")
+                            .SetCardIssuerName("발급사명")
+                            .SetCardIssuer("발급사코드")
+                            .SetCardAcquirer("매입사코드")
+                            .SetCardType(CardType.CREDIT)
+                        ),
+                    iss, encKey)   //Optional 압니다.
                    .WithIdentityAuthenticationId("userInfoMapper.identityAuthenticationId")
                .And()
                .Pay()
@@ -276,6 +292,7 @@ namespace SyrupPay.Sample
                     .WithMatchedUser(MatchedUser.CI_MATCHED_ONLY)  // Optional 입니다.자동결제 제약 조건입니다. 
                     .WithPlanInterval(SubscriptionInterval.ONDEMAND)
                     .WithPlanName("SKT_IOT_HOME")
+                    .WithPromotionCode("12345678901234567890123456789012")
                 .And()
                .GenerateTokenBy(encKey);
         }
