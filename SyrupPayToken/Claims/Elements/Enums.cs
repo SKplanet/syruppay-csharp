@@ -4,7 +4,7 @@ namespace SyrupPayToken
 {
     public enum MappingType
     {
-        UNDEFINED, CI_HASH, CI_MAPPED_KEY
+        UNDEFINED, CI_HASH, CI_MAPPED_KEY, ENCRYPTED_PERSONAL_INFO
     }
 
     public enum LoyaltyId
@@ -93,5 +93,18 @@ namespace SyrupPayToken
     public enum DeliveryType
     {
         UNDEFINED, PREPAID, FREE, DIY, QUICK, PAYMENT_ON_DELIVERY
+    }
+
+    public enum OperatorCode
+    {
+        SKT, KT, LGU, SKTM, KTM, LGUM, UNKNOWN
+    }
+
+    public enum CardType
+    {
+        [Description("CC")]
+        CREDIT,
+        [Description("CH")]
+        CHECK
     }
 }
