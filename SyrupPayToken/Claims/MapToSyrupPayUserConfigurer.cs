@@ -31,10 +31,11 @@ namespace SyrupPayToken.Claims
 
         public MapToSyrupPayUserConfigurer<H> WithValue(Personal p, string kid, string key)
         {
+            string payload = JsonConvert.SerializeObject(p);
             this.mappingValue = new Jose().Configuration(
                 JoseBuilders.JsonEncryptionCompactSerializationBuilder()
                     .Header(new JoseHeader(JsonWebAlgorithm.A256KW, JsonWebAlgorithm.A128CBC_HS256, kid))
-                    .Payload(JsonConvert.SerializeObject(p))
+                    .Payload(payload)
                     .Key(key)
                 ).Serialization();
             return this;
