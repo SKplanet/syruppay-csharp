@@ -16,7 +16,7 @@ namespace SyrupPayToken.Claims
         private string cardNameInEnglish;
         private string cardAcquirer;
         [JsonConverter(typeof(StringEnumConverter))]
-        private CardType cardType;
+        private CardType cardType = CardType.UNDEFINDED;
 
         public PayableCard SetCardNo(string cardNo)
         {

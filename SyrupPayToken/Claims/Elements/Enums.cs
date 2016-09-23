@@ -105,6 +105,8 @@ namespace SyrupPayToken
         [Description("CC")]
         CREDIT,
         [Description("CH")]
-        CHECK
+        CHECK,
+        [Description("UNDEFINED")]
+        UNDEFINDED
     }
 }
