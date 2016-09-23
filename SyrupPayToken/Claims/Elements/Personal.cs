@@ -21,11 +21,11 @@ namespace SyrupPayToken.Claims
         {
             if (username == null || ssnFirst7Digit == null || lineNumber == null)
             {
-                throw new IllegalArgumentException(String.Format("you should set with valid parameters to create this instance. username: {1}, ssnFirst7Digit: {2}, lineNumber: {3}", username, ssnFirst7Digit, lineNumber));
+                throw new IllegalArgumentException(String.Format("you should set with valid parameters to create this instance. username: {0}, ssnFirst7Digit: {1}, lineNumber: {2}", username, ssnFirst7Digit, lineNumber));
             }
             else if (ssnFirst7Digit.Length != 7)
             {
-                throw new IllegalArgumentException(String.Format("length of ssnFirst7Digit should be 7. yours: {1} ({2})", ssnFirst7Digit, ssnFirst7Digit.Length));
+                throw new IllegalArgumentException(String.Format("length of ssnFirst7Digit should be 7. yours: {0} ({1})", ssnFirst7Digit, ssnFirst7Digit.Length));
             }
             this.username = username;
             this.ssnFirst7Digit = ssnFirst7Digit;
@@ -52,7 +52,7 @@ namespace SyrupPayToken.Claims
 
             if (ssnFirst7Digit.Length != 7)
             {
-                throw new IllegalArgumentException(String.Format("length of ssnFirst7Digit should be 7. yours inputs is : {1}", ssnFirst7Digit));
+                throw new IllegalArgumentException(String.Format("length of ssnFirst7Digit should be 7. yours inputs is : {0}", ssnFirst7Digit));
 
             }
             this.ssnFirst7Digit = ssnFirst7Digit;
