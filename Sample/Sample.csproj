@@ -11,7 +11,6 @@
     <AssemblyName>Sample</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -20,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -42,10 +41,6 @@
     </Reference>
     <Reference Include="SyrupPayJose, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1f96dde2b7879ecf, processorArchitecture=MSIL">
       <HintPath>..\packages\SyrupPayJose.0.1.6\lib\net40\SyrupPayJose.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SyrupPayToken, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5850b5dcd2d161c, processorArchitecture=MSIL">
-      <HintPath>..\packages\SyrupPayToken.0.1.6\lib\net40\SyrupPayToken.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -76,6 +71,12 @@
     <Content Include="login_token_sample.vbs" />
     <Content Include="mctTAToken_sample.vbs" />
     <Content Include="transaction_token_sample.vbs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SyrupPayToken\SyrupPayToken.csproj">
+      <Project>{62a85bfb-ced2-4803-ac8a-960825471e7a}</Project>
+      <Name>SyrupPayToken</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
