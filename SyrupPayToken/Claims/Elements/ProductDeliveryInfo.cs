@@ -9,7 +9,7 @@ namespace SyrupPayToken.Claims
     public sealed class ProductDeliveryInfo : Element
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        private DeliveryType deliveryType = DeliveryType.UNDEFINED;
+        private Nullable<DeliveryType> deliveryType = null;
         private string deliveryName;
         private bool defaultDeliveryCostApplied;
         private bool additionalDeliveryCostApplied;
@@ -47,7 +47,7 @@ namespace SyrupPayToken.Claims
 
         public void ValidRequired()
         {
-            if (deliveryType == DeliveryType.UNDEFINED || String.IsNullOrEmpty(deliveryName))
+            if (deliveryType.GetValueOrDefault() == DeliveryType.UNDEFINED || String.IsNullOrEmpty(deliveryName))
             {
                 throw new IllegalArgumentException("ProductDeliveryInfo object couldn't be with null fields. deliveryType : " + deliveryType + ", deliveryName : " + deliveryName);
             }

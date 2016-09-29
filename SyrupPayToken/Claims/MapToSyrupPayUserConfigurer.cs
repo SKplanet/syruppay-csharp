@@ -11,7 +11,7 @@ namespace SyrupPayToken.Claims
     public class MapToSyrupPayUserConfigurer<H> : AbstractTokenConfigurer<MapToSyrupPayUserConfigurer<H>, H> where H : ITokenBuilder<H>
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        private MappingType mappingType = MappingType.UNDEFINED;
+        private Nullable<MappingType> mappingType = null;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string mappingValue;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -54,7 +54,7 @@ namespace SyrupPayToken.Claims
 
         public override void ValidRequired()
         {
-            if (mappingType == MappingType.UNDEFINED || String.IsNullOrEmpty(mappingValue))
+            if (mappingType.GetValueOrDefault() == MappingType.UNDEFINED || String.IsNullOrEmpty(mappingValue))
             {
                 throw new IllegalArgumentException("fields to map couldn't be null. type : " + this.mappingType + "value : " + this.mappingValue);
             }

@@ -9,7 +9,7 @@ namespace SyrupPayToken.Claims
     public class Error : Element
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        private ErrorType type = ErrorType.UNDEFINED;
+        private Nullable<ErrorType> type = null;
         private string description;
 
         public Error SetType(ErrorType type)
@@ -26,7 +26,7 @@ namespace SyrupPayToken.Claims
 
         public void ValidRequired()
         {
-            if (type == ErrorType.UNDEFINED || String.IsNullOrEmpty(description))
+            if (type.GetValueOrDefault() == ErrorType.UNDEFINED || String.IsNullOrEmpty(description))
             {
                 throw new IllegalArgumentException("Error object couldn't be with null fields type : " + type + ", description : " + description);
             }

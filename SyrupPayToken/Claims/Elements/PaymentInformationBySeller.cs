@@ -21,7 +21,7 @@ namespace SyrupPayToken.Claims
         private string deliveryName;
         [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private DeliveryType deliveryType;
+        private Nullable<DeliveryType> deliveryType = null;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private List<CardInstallmentInformation> cardInfoList;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -83,7 +83,7 @@ namespace SyrupPayToken.Claims
 
         public DeliveryType DeliveryType
         {
-            get { return deliveryType; }
+            get { return deliveryType.GetValueOrDefault(); }
             set { deliveryType = value; }
         }
 
