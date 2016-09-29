@@ -97,16 +97,16 @@ namespace SyrupPayToken
 
     public enum OperatorCode
     {
-        SKT, KT, LGU, SKTM, KTM, LGUM, UNKNOWN
+        UNDEFINDED, SKT, KT, LGU, SKTM, KTM, LGUM
     }
 
     public enum CardType
     {
+        [Description("UNDEFINED")]
+        UNDEFINDED,
         [Description("CC")]
         CREDIT,
         [Description("CH")]
         CHECK,
-        [Description("UNDEFINED")]
-        UNDEFINDED
     }
 }

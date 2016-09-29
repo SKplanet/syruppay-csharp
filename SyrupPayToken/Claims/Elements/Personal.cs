@@ -11,7 +11,7 @@ namespace SyrupPayToken.Claims
         private string username;
         private string lineNumber;
         [JsonConverter(typeof(StringEnumConverter))]
-        private OperatorCode operatorCode;
+        private Nullable<OperatorCode> operatorCode = null;
         private string ssnFirst7Digit;
         private string email;
         private string ciHash;

@@ -91,6 +91,7 @@ namespace SyrupPay
         string ShippingAddress { set; }
         string DeliveryPhoneNumber { set; }
         string DeliveryName { set; }
+        string DeliveryType { set; }
         void AddCardInfo(string cardCode, string monthlyInstallmentInfo);
         bool IsExchangeable { set; }
         string CardIssuerRegion { set; }
@@ -248,6 +249,15 @@ namespace SyrupPay
         public string DeliveryName
         {
             set { PayConfigure.WithDeliveryName(value); }
+        }
+
+        public string DeliveryType
+        {
+            set
+            {
+                DeliveryType deliveryType = (DeliveryType)Enum.Parse(typeof(DeliveryType), value.ToUpper());
+                PayConfigure.WithDeliveryType(deliveryType);
+            }
         }
 
         public void AddCardInfo(string cardCode, string monthlyInstallmentInfo)

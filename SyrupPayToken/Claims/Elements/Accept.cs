@@ -10,7 +10,7 @@ namespace SyrupPayToken.Claims
     public sealed class Accept : Element
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        private AcceptType type = AcceptType.UNDEFINED;
+        private Nullable<AcceptType> type = null;
         private List<Dictionary<string, object>> conditions = new List<Dictionary<string, object>>();
 
         public Accept SetType(AcceptType type)
@@ -36,7 +36,7 @@ namespace SyrupPayToken.Claims
 
         public void ValidRequired()
         {
-            if (type == AcceptType.UNDEFINED)
+            if (type.GetValueOrDefault() == AcceptType.UNDEFINED)
             {
                 throw new IllegalArgumentException("Accept object couldn't be with null fields.");
             }

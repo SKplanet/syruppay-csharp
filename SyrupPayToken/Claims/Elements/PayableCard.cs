@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SyrupPayToken.exception;
+using System;
 
 namespace SyrupPayToken.Claims
 {
@@ -16,7 +17,7 @@ namespace SyrupPayToken.Claims
         private string cardNameInEnglish;
         private string cardAcquirer;
         [JsonConverter(typeof(StringEnumConverter))]
-        private CardType cardType = CardType.UNDEFINDED;
+        private Nullable<CardType> cardType = null;
 
         public PayableCard SetCardNo(string cardNo)
         {
