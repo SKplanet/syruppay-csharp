@@ -78,6 +78,7 @@ namespace SyrupPay
         string ExtraUserId { set; }
         string ImplicitSSOSeed { set; }
         string SSOCredential { set; }
+        void isNotApplicableSso();
         string DeviceIdentifier { set; }
         string MappingType { set; }
         string MappingValue { set; }
@@ -177,6 +178,11 @@ namespace SyrupPay
         public string DeviceIdentifier
         {
             set { MerchantUserConfigure.WithDeviceIdentifier(value); }
+        }
+
+        public void isNotApplicableSso()
+        {
+            MerchantUserConfigure.isNotApplicableSso();
         }
 
         public string MappingType

@@ -14,6 +14,7 @@ With objMctTAToken
 '.ExtraUserId = "extraUserId"       'optional
 '.ImplicitSSOSeed = "seed"          'optional
 .SSOCredential = "SSO"             'optional
+.isNotApplicableSso
 '.DeviceIdentifier = "deviceId"     'optional
 '.MappingType = "CI_HASH"           'optional
 '.MappingValue = "CI"               'optional
