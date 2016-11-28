@@ -13,9 +13,11 @@ namespace SyrupPayToken.Claims
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private string implicitSSOSeed;
         [JsonProperty("SSOCredential", NullValueHandling = NullValueHandling.Ignore)]
-        private String ssoCredential;
+        private string ssoCredential;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        private String deviceIdentifier;
+        private string deviceIdentifier;
+        [JsonProperty("SSOPolicy", NullValueHandling = NullValueHandling.Ignore)]
+        private string ssoPolicy;
 
         public MerchantUserConfigurer<H> WithMerchantUserId(String merchantUserId)
         {
@@ -45,6 +47,12 @@ namespace SyrupPayToken.Claims
         public MerchantUserConfigurer<H> WithDeviceIdentifier(String deviceIdentifier)
         {
             this.deviceIdentifier = deviceIdentifier;
+            return this;
+        }
+
+        public MerchantUserConfigurer<H> isNotApplicableSso()
+        {
+            this.ssoPolicy = "NOT_APPLICABLE";
             return this;
         }
 

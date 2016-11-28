@@ -154,6 +154,7 @@ namespace SyrupPay.Sample
                    .WithExtraMerchantUserId("loginInfo.extraUserId")  //Optional 입니다. 
                    .WithSsoCredential("loginInfo.SSOCredential")      //SSOCredential 정보는 시럽페이가 제공하는 REST API를 통해 값이 정상적으로 전달된 경우 Setting 합니다.
                    .WithDeviceIdentifier("loginInfo.deviceIdentifier")  //Optional 입니다. 
+                   //.isNotApplicableSso()
                .And()
                .MapToSyrupPayUser()   //Optional 입니다.
                    .WithType(MappingType.ENCRYPTED_PERSONAL_INFO) // Optional 입니다.
